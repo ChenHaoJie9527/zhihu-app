@@ -12,7 +12,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "node"
     ],
     "paths": {
       "@/*": [
@@ -24,6 +25,9 @@
       "dom",
       "dom.iterable",
       "scripthost"
+    ],
+    "typeRoots":[
+      "./node_modules/@types"
     ]
   },
   "include": [
@@ -35,5 +39,8 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  
+ 
+
 }
