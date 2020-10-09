@@ -22,6 +22,7 @@
 </template>
 
 <script lang="ts">
+declare let require: any;
 import { computed, defineComponent, PropType } from "vue";
 export interface ColumnProps {
   id: number;
@@ -29,7 +30,7 @@ export interface ColumnProps {
   avatar?: string;
   description: string;
 }
-declare let require: any;
+
 export default defineComponent({
   name: "ColumnList",
   props: {
@@ -40,17 +41,17 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, context) {
+  setup(props) {
     const ColumList = computed(() => {
-      return props.list.map(item=>{
-        if(!item.avatar){
-          item.avatar = require("../assets/avatar.jpg")
+      return props.list.map((item) => {
+        if (!item.avatar) {
+          item.avatar = require("../assets/avatar.jpg");
         }
         return item;
-      })
+      });
     });
     return {
-      ColumList
+      ColumList,
     };
   },
 });

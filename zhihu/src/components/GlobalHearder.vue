@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType } from "vue";
 import DropDown from "./Dropdown.vue";
 import DropddownItem from "./DropddownItem.vue";
 export interface UserProps {
