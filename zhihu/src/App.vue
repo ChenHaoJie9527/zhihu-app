@@ -4,8 +4,11 @@
     <ColumnList :list="testData" v-if="false"></ColumnList>
     <div class="mb-3">
       <label class="form-label">邮箱地址</label>
-      <ValidateInput :rules="emailRules" v-model="inputRef"></ValidateInput>
-      {{inputRef}}
+      <ValidateInput :rules="emailRules" v-model="inputRef" placeholder="请输入邮箱地址" type="text"></ValidateInput>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">密码</label>
+      <ValidatePassword :rules="passRules" v-model="passwordRef" placeholder="请输入密码" type="text"></ValidatePassword>
     </div>
     <form action="" v-if="false">
       <div class="mb-3">
@@ -41,6 +44,7 @@ import { defineComponent, reactive, ref } from "vue";
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
 import GlobalHearder, { UserProps } from "./components/GlobalHearder.vue";
 import ValidateInput, { RulesProp } from "./components/ValidateInput.vue";
+import ValidatePassword, {RulesPropType} from "./components/ValidatePassword.vue";
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -87,11 +91,14 @@ export default defineComponent({
   components: {
     ColumnList,
     GlobalHearder,
-    ValidateInput
+    ValidateInput,
+    ValidatePassword
   },
+  
   props: {},
   setup() {
-    const inputRef = ref("123123");
+    const inputRef = ref("");
+    const passwordRef = ref("");
     const emailRef = reactive<EmailProps>({
       val: "",
       message: "",
@@ -107,6 +114,16 @@ export default defineComponent({
         message: "请输入正确的电子邮箱格式",
       },
     ];
+    const passRules: RulesPropType = [
+      {
+        type: "required",
+        message: "密码不能为空"
+      },
+      {
+        type: "password",
+        message: "密码格式不对"
+      }
+    ]
     const validateEmail = () => {
       if (emailRef.val.trim() === "") {
         emailRef.error = true;
@@ -120,9 +137,11 @@ export default defineComponent({
       testData,
       currentUser,
       emailRef,
-      validateEmail,
       emailRules,
-      inputRef
+      inputRef,
+      validateEmail,
+      passwordRef,
+      passRules
     };
   },
 });
