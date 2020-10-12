@@ -3,20 +3,21 @@
     <input
       class="form-control"
       @blur="validatePassword"
-      :class="{'is-invalid':passwordRef.error}"
+      :class="{ 'is-invalid': passwordRef.error }"
       :value="passwordRef.val"
       @input="passwordUpdate"
       v-bind="$attrs"
     />
     <span v-if="passwordRef.error" class="invalid-feedback">
-        {{passwordRef.message}}
+      {{ passwordRef.message }}
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, onMounted, PropType } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
+import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
   type: "password" | "required";
   message: string;
@@ -35,6 +36,9 @@ export default defineComponent({
       passwordUpdate,
       validatePassword,
     } = useValidatePassword(props, context);
+    onMounted(() => {
+      emitter.emit("form-item-create", validatePassword);
+    });
     return {
       passwordRef,
       passwordUpdate,

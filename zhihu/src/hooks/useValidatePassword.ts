@@ -44,8 +44,10 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
                 }
                 return passw;
             })
-            passwordRef.error = !allpassword
+            passwordRef.error = !allpassword;
+            return allpassword;
         }
+        return true;
     };
     return {
         passwordRef,

@@ -5,7 +5,7 @@ interface EmailProps {
     error: boolean;
 }
 interface RuleProp {
-    type: "required" | "email" | "password";
+    type: "required" | "email" ;
     message: string;
 }
 type RulesProp = RuleProp[];
@@ -47,7 +47,9 @@ const useValidate = (props: propsType, context: contextType) => {
                 return passed;
             });
             inputRef.error = !allPassed;
+            return allPassed;
         }
+        return true;
     };
     return {
         inputRef,
