@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
 import ValidatePassword, { RulesPropType } from "../components/ValidatePassword.vue";
@@ -45,8 +46,17 @@ export default defineComponent({
   setup() {
     const inputRef = ref();
     const passwordRef1 = ref();
+    const router = useRouter();
     const onFormSubmit = (val: boolean) => {
       console.log(val);
+      if(val){
+        router.push({
+          name: "column",
+          params: {
+            id: 12580
+          }
+        })
+      }
     };
     const emailRules: RulesProp = [
       {

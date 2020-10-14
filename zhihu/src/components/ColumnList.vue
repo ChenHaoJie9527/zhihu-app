@@ -13,7 +13,7 @@
             <p class="card-text text-left">
               {{ item.description }}
             </p>
-            <a href="#" class="btn btn-outline-primary">进入专栏</a>
+            <router-link href="#" class="btn btn-outline-primary" :to="`/column/${item.id}?id=123`">进入专栏</router-link>
           </div>
         </div>
       </div>
