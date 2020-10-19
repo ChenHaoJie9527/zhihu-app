@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div class="col-4 mt-2" v-for="item in ColumList" :key="item.id">
-      <div class="card h-100 shadow-sm p-3 mb-5 bg-white rounded">
+    <div class="col-4 mb-4" v-for="item in ColumList" :key="item.id">
+      <div class="card h-100 shadow-sm p-3 mb-5">
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light w-20 my-3"
@@ -57,9 +57,6 @@ export default defineComponent({
         name: "column",
         params: {
           id,
-        },
-        query: {
-          num: 123,
         },
       });
     };

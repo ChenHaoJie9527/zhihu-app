@@ -24,22 +24,17 @@
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
 import { testData, testPosts } from "../testData";
-import PostList from "../components/ColumnList.vue";
 import { useStore } from "vuex";
+import PostList from "../components/PostList.vue";
 export default defineComponent({
   name: "ColumnDetail",
   components: {
-    PostList,
+    PostList
   },
   setup() {
     const store = useStore();
     const route = useRoute();
     const currenID = +route.params.id;
-    // const column = testData.find(
-    //   (item) => item.id == ((currenID as unknown) as number)
-    // ); //方法一 将字符串类型转化为number类型
-    // // const column = testData.find((item) => item.id === currenID); // 方法二 通过JS类型转化
-    // const list = testPosts.filter((item) => item.columnId === currenID);
     const column = store.getters.getColumns(currenID);
     const list = store.getters.getList(currenID);
     return {

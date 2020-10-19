@@ -18,7 +18,7 @@
       <li class="list-inline-item">
         <DropDown :title="`您好${user.name ? user.name : 'vikkit'}`">
           <DropddownItem>
-            <a href="#" class="dropdown-item">新建文章</a>
+            <a href="#" class="dropdown-item" @click.prevent="onCreateNewPost">新建文章</a>
           </DropddownItem>
           <DropddownItem disabled>
             <a href="#" class="dropdown-item">我的专栏</a>
@@ -64,8 +64,14 @@ export default defineComponent({
         name: "login"
       })
     };
+    const onCreateNewPost = () => {
+      router.push({
+        name: "create"
+      })
+    }
     return {
-      onClickToLogin
+      onClickToLogin,
+      onCreateNewPost
     };
   },
 });
