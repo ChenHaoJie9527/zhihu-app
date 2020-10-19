@@ -3,7 +3,12 @@
     <a class="navbar-brand" href="#">知乎专栏</a>
     <ul v-if="!user.isLogin" class="list-inline mb-1">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-dark my-2">登录</a>
+        <a
+          href="#"
+          class="btn btn-outline-dark my-2"
+          @click.prevent="onClickToLogin"
+          >登录</a
+        >
       </li>
       <li class="list-inline-item mb-1">
         <a href="#" class="btn btn-outline-dark my-2">注册</a>
@@ -34,6 +39,7 @@
 import { defineComponent, PropType } from "vue";
 import DropDown from "./Dropdown.vue";
 import DropddownItem from "./DropddownItem.vue";
+import { useRouter } from "vue-router";
 export interface UserProps {
   isLogin: boolean;
   name?: string;
@@ -52,7 +58,15 @@ export default defineComponent({
     },
   },
   setup() {
-    return {};
+    const router = useRouter();
+    const onClickToLogin = () => {
+      router.push({
+        name: "login"
+      })
+    };
+    return {
+      onClickToLogin
+    };
   },
 });
 </script>

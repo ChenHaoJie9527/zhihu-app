@@ -26,7 +26,6 @@
         <span class="btn btn-danger">提交Submit</span>
       </template>
     </ValidateForm>
-
   </div>
 </template>
 
@@ -35,27 +34,35 @@ import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
-import ValidatePassword, { RulesPropType } from "../components/ValidatePassword.vue";
+import ValidatePassword, {
+  RulesPropType,
+} from "../components/ValidatePassword.vue";
+import { useStore } from "vuex";
+import { GlobalDataProps } from "../store";
 export default defineComponent({
   name: "login",
   components: {
     ValidateForm,
     ValidateInputs,
-    ValidatePassword
+    ValidatePassword,
   },
   setup() {
+    const store = useStore<GlobalDataProps>();
     const inputRef = ref();
     const passwordRef1 = ref();
     const router = useRouter();
     const onFormSubmit = (val: boolean) => {
-      console.log(val);
-      if(val){
+      if (val) {
+        // router.push({
+        //   name: "column",
+        //   params: {
+        //     id: 12580,
+        //   },
+        // });
         router.push({
-          name: "column",
-          params: {
-            id: 12580
-          }
+          name: "home"
         })
+        store.commit("login")
       }
     };
     const emailRules: RulesProp = [
@@ -84,13 +91,13 @@ export default defineComponent({
     const validatePasswordRef = ref<any>();
 
     return {
-        inputRef,
-        passwordRef1,
-        onFormSubmit,
-        emailRules,
-        passRules,
-        validateEmailRef,
-        validatePasswordRef
+      inputRef,
+      passwordRef1,
+      onFormSubmit,
+      emailRules,
+      passRules,
+      validateEmailRef,
+      validatePasswordRef,
     };
   },
 });
