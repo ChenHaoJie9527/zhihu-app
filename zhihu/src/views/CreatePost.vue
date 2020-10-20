@@ -14,7 +14,8 @@
       <div class="mb-3">
         <label class="form-label">文章详情：</label>
         <ValidatePassowrd
-          type="password"
+          type="text"
+          tag="textarea"
           placeholder="请输入文章详情"
           v-model="contentVal"
           :rules="contentRules"
@@ -57,7 +58,7 @@ export default defineComponent({
     ];
     const contentRules: RulesPropType = [
       {
-        type: "password",
+        type: "text",
         message: "文章详情不能为空",
       },
     ];

@@ -21,7 +21,7 @@ export const store = createStore<GlobalDataProps>({
         columns: testData,
         posts: testPosts,
         user: {
-            isLogin: false,
+            isLogin: true,
             name: "viking",
             columnId: 1
         }
@@ -44,6 +44,9 @@ export const store = createStore<GlobalDataProps>({
         },
         getList: state => (id: number) => {
             return state.posts.filter(item => item.columnId == id);
+        },
+        getUserIsLogin: state => ()=>{
+            return state.user.isLogin;
         }
     },
 }); 

@@ -5,18 +5,19 @@ interface PasswordProps {
     error: boolean;
 }
 interface RuleProp {
-    type: "password" | "required";
+    type: "text" | "password" | "required";
     message: string;
 }
 type RulesPropType = RuleProp[];
 interface P1 {
     rules?: RulesPropType;
     modeValue?: string;
+    tag?: string;
 }
 type passwordType = Readonly<P1>;
 type passwordContextType = SetupContext<Record<string, any>>;
 const useValidatePassword = (props: passwordType, context: passwordContextType) => {
-    const password = /^d{1,10}/; // 最少6位 包括至少1个大写字母 1个小写字母 1个数字 1个特殊字符 如Kd@chj183
+    const password = /^\d{6}$/; // 最少6位 包括至少1个大写字母 1个小写字母 1个数字 1个特殊字符 如Kd@chj183
     const passwordRef = reactive<PasswordProps>({
         val: props.modeValue || "",
         message: "",
