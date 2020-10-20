@@ -1,4 +1,4 @@
-import { reactive, SetupContext } from "vue";
+import { reactive, SetupContext, watch } from "vue";
 interface PasswordProps {
     val: string;
     message: string;
@@ -16,7 +16,7 @@ interface P1 {
 type passwordType = Readonly<P1>;
 type passwordContextType = SetupContext<Record<string, any>>;
 const useValidatePassword = (props: passwordType, context: passwordContextType) => {
-    const password = /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/; // 最少6位 包括至少1个大写字母 1个小写字母 1个数字 1个特殊字符 如Kd@chj183
+    const password = /^d{1,10}/; // 最少6位 包括至少1个大写字母 1个小写字母 1个数字 1个特殊字符 如Kd@chj183
     const passwordRef = reactive<PasswordProps>({
         val: props.modeValue || "",
         message: "",
@@ -49,6 +49,9 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
         }
         return true;
     };
+    watch(passwordRef,()=>{
+        console.log(passwordRef.val,passwordRef.error);
+    })
     return {
         passwordRef,
         passwordUpdate,

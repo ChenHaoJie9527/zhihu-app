@@ -24,11 +24,6 @@ import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
 import GlobalHearder, { UserProps } from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
-// const currentUser: UserProps = {
-//   isLogin: true,
-//   name: "CHJ",
-// };
-// const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 interface EmailProps {
   val: string;
   message: string;

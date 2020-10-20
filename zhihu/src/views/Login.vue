@@ -53,12 +53,6 @@ export default defineComponent({
     const router = useRouter();
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        // router.push({
-        //   name: "column",
-        //   params: {
-        //     id: 12580,
-        //   },
-        // });
         router.push({
           name: "home"
         })
