@@ -1,11 +1,11 @@
 <template>
   <div class="row">
-    <div class="col-4 mb-4" v-for="item in ColumList" :key="item.id">
+    <div class="col-4 mb-4" v-for="item in ColumList" :key="item._id">
       <div class="card h-100 shadow-sm p-3 mb-5">
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light w-20 my-3"
-            :src="item.avatar"
+            :src="item.avatar.url"
             :alt="item.title"
           />
           <div class="card-body">
@@ -13,7 +13,13 @@
             <p class="card-text text-left">
               {{ item.description }}
             </p>
-            <div href="#" class="btn btn-outline-primary"  @click="onClickToColumn(item.id)">进入专栏</div>
+            <div
+              href="#"
+              class="btn btn-outline-primary"
+              @click="onClickToColumn(item._id)"
+            >
+              进入专栏
+            </div>
           </div>
         </div>
       </div>
@@ -25,12 +31,19 @@
 declare let require: any;
 import { computed, defineComponent, PropType } from "vue";
 import { useRouter } from "vue-router";
-export interface ColumnProps {
-  id: number;
-  title: string;
-  avatar?: string;
-  description: string;
+import { ColumnProps } from "../store";
+interface AvatarType {
+  url: string;
+  _id: string;
 }
+// export interface ColumnProps {
+//   _id: number;
+//   title: string;
+//   avatar?: AvatarType;
+//   description: string;
+//   createdAt: string;
+//   key: number;
+// }
 
 export default defineComponent({
   name: "ColumnList",

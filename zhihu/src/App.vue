@@ -20,7 +20,7 @@
 <script lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css";
 import { computed, defineComponent, reactive, ref } from "vue";
-import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
+import ColumnList from "./components/ColumnList.vue";
 import GlobalHearder, { UserProps } from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";

@@ -1,3 +1,7 @@
+interface AvatarType {
+  url: string;
+  _id: string;
+} 
 export interface ColumnProps {
     id: number;
     title: string;
