@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <GlobalHearder :user="currentUser"></GlobalHearder>
-    <h1 v-if="isLoading">正在读取!!!</h1>
+    <Loading v-if="isLoading"></Loading>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -23,6 +23,7 @@ import { computed, defineComponent } from "vue";
 import GlobalHearder from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
+import Loading from "./components/Loading.vue";
 interface EmailProps {
   val: string;
   message: string;
@@ -43,6 +44,7 @@ export default defineComponent({
   name: "App",
   components: {
     GlobalHearder,
+    Loading
   },
   setup() {
     const store = useStore<GlobalDataProps>();
