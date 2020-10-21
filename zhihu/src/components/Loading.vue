@@ -1,15 +1,16 @@
 <template>
-  <div class="loading-container" :style="{ backgroundColor: background }" >
-    <div class="loading-content">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="sr-only text-primary small">{{ text || "loading" }}...</p>
-      
+  <teleport to="#loading">
+    <div class="loading-container" :style="{ backgroundColor: background }">
+      <div class="loading-content">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="sr-only text-primary small">{{ text || "loading" }}...</p>
+      </div>
     </div>
-  </div>
+  </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onUnmounted } from "vue";
 
 export default defineComponent({
   name: "Loading",
@@ -22,6 +23,14 @@ export default defineComponent({
       type: String,
       defualt: "",
     },
+  },
+  setup() {
+    const loadingNode = document.createElement("div");
+    loadingNode.id = "loading";
+    document.body.appendChild(loadingNode);
+    onUnmounted(()=>{
+        document.body.removeChild(loadingNode);
+    })
   },
 });
 </script>
