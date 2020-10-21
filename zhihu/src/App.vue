@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <GlobalHearder :user="currentUser"></GlobalHearder>
+    <h1 v-if="isLoading">正在读取!!!</h1>
     <router-view></router-view>
-    <ColumnList :list="testData" v-if="false"></ColumnList>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
         <ul class="list-inline mb-0">
@@ -19,8 +19,7 @@
 
 <script lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css";
-import { computed, defineComponent, reactive } from "vue";
-import ColumnList from "./components/ColumnList.vue";
+import { computed, defineComponent } from "vue";
 import GlobalHearder from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
@@ -43,24 +42,15 @@ interface ValidateEmailType {
 export default defineComponent({
   name: "App",
   components: {
-    ColumnList,
     GlobalHearder,
   },
   setup() {
-    const emailRef = reactive<EmailProps>({
-      val: "",
-      message: "",
-      error: false,
-    });
     const store = useStore<GlobalDataProps>();
-    const currentUser = computed(() => {
-      return store.state.user;
-    });
-    const testData = store.state.columns;
+    const currentUser = computed(() => store.state.user);
+    const isLoading = computed(()=> store.getters.getLoading());
     return {
-      testData,
       currentUser,
-      emailRef,
+      isLoading
     };
   },
 });

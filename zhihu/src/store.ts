@@ -1,6 +1,7 @@
 import { createStore, Commit } from "vuex";
 // import { testPosts } from "./testData";
 import axios from "axios";
+import { resolve } from 'path';
 interface AvatarType {
     url: string;
     _id: string;
@@ -41,8 +42,16 @@ export interface GlobalDataProps {
 
 // Action函数
 const asyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
+    // 请求开始时显示loading
+    // commit("setLoading", true);
     const { data } = await axios.get(url);
+
+    // 延迟两秒
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+
     commit(mutationsName, data);
+    // 请求完成时关闭loading
+    // commit("setLoading", false);
 }
 
 export const store = createStore<GlobalDataProps>({
@@ -65,6 +74,9 @@ export const store = createStore<GlobalDataProps>({
         },
         getUserIsLogin: state => () => {
             return state.user.isLogin;
+        },
+        getLoading: state => () => {
+            return state.loading;
         }
     },
     mutations: {
