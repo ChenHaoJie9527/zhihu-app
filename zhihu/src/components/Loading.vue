@@ -1,8 +1,9 @@
 <template>
-  <div class="loading-container">
+  <div class="loading-container" :style="{ backgroundColor: background }" >
     <div class="loading-content">
       <div class="spinner-border text-primary" role="status"></div>
-      <span class="sr-only">加载中...</span>
+      <p class="sr-only text-primary small">{{ text || "loading" }}...</p>
+      
     </div>
   </div>
 </template>
@@ -19,6 +20,7 @@ export default defineComponent({
     },
     background: {
       type: String,
+      defualt: "",
     },
   },
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <GlobalHearder :user="currentUser"></GlobalHearder>
-    <Loading v-if="isLoading"></Loading>
+    <Loading v-if="isLoading" text="拼命加载中" background="rgba(0,0,0,0.8)"></Loading>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
