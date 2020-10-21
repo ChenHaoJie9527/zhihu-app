@@ -19,9 +19,9 @@
 
 <script lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css";
-import { computed, defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import ColumnList from "./components/ColumnList.vue";
-import GlobalHearder, { UserProps } from "./components/GlobalHearder.vue";
+import GlobalHearder from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
 interface EmailProps {

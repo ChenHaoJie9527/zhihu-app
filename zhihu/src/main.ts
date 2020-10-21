@@ -8,9 +8,5 @@ axios.interceptors.request.use(config => {
     config.params = { ...config.params, icode: "E219C6BE1D9368AF" };
     return config;
 })
-// axios.get("/columns").then(res => {
-//     console.log(res.data);
-// })
-
 
 createApp(App).use(router).use(store).mount('#app')
