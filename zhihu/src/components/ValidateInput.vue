@@ -31,7 +31,7 @@ export default defineComponent({
   },
   inheritAttrs: false, // inheritAttrs 禁用子组件根节点继承子组件非prop属性
   setup(props, context) {
-    console.log(context.attrs); // 可以获取到父组件传递过来的非prop属性 可通过v-bing="$attrs"设置属性
+    // console.log(context.attrs); // 可以获取到父组件传递过来的非prop属性 可通过v-bing="$attrs"设置属性
     const { inputRef, validateInput, updateValue } = useValidate(
       props,
       context

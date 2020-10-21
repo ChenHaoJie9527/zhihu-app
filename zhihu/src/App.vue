@@ -19,9 +19,10 @@
 
 <script lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css";
-import { defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, reactive, ref } from "vue";
 import ColumnList, { ColumnProps } from "./components/ColumnList.vue";
 import GlobalHearder, { UserProps } from "./components/GlobalHearder.vue";
+import { useStore } from "vuex";
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -53,10 +54,6 @@ const testData: ColumnProps[] = [
   },
 ];
 
-const currentUser: UserProps = {
-  isLogin: true,
-  name: "CHJ",
-};
 const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 interface EmailProps {
   val: string;
@@ -81,6 +78,10 @@ export default defineComponent({
     GlobalHearder,
   },
   setup() {
+    const store = useStore();
+    const currentUser = computed(() => {
+      return store.state.user;
+    });
     const emailRef = reactive<EmailProps>({
       val: "",
       message: "",

@@ -1,6 +1,16 @@
 <template>
   <div class="validate-input-container pb-3">
     <input
+      v-if="tag !== 'textarea'"
+      class="form-control"
+      @blur="validatePassword"
+      :class="{ 'is-invalid': passwordRef.error }"
+      :value="passwordRef.val"
+      @input="passwordUpdate"
+      v-bind="$attrs"
+    />
+    <textarea
+      v-else
       class="form-control"
       @blur="validatePassword"
       :class="{ 'is-invalid': passwordRef.error }"
@@ -15,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType } from "vue";
+import { defineComponent, onMounted, PropType, watch } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
 import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
@@ -23,11 +33,16 @@ interface RuleProp {
   message: string;
 }
 export type RulesPropType = RuleProp[];
+export type TagType = "input" | "textarea";
 export default defineComponent({
   name: "ValidatePassword",
   props: {
     rules: Array as PropType<RulesPropType>,
     modelValue: String,
+    tag: {
+      type: String as PropType<TagType>,
+      default: "input",
+    },
   },
   inheritAttrs: false, // inheritAttrs 禁用子组件根节点继承子组件非prop属性
   setup(props, context) {
@@ -39,6 +54,11 @@ export default defineComponent({
     onMounted(() => {
       emitter.emit("form-item-create", validatePassword);
     });
+    console.log(props.tag)
+    watch(props,()=>{
+      console.log("tag",props.tag)
+
+    })
     return {
       passwordRef,
       passwordUpdate,

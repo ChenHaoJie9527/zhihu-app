@@ -13,7 +13,13 @@
             <p class="card-text text-left">
               {{ item.description }}
             </p>
-            <router-link href="#" class="btn btn-outline-primary" :to="`/column/${item.id}?id=123`">进入专栏</router-link>
+            <div
+              href="#"
+              class="btn btn-outline-primary"
+              @click="onClickToColumn(item.id)"
+            >
+              进入专栏
+            </div>
           </div>
         </div>
       </div>
@@ -24,6 +30,7 @@
 <script lang="ts">
 declare let require: any;
 import { computed, defineComponent, PropType } from "vue";
+import { useRouter } from "vue-router";
 export interface ColumnProps {
   id: number;
   title: string;
@@ -50,8 +57,21 @@ export default defineComponent({
         return item;
       });
     });
+    const router = useRouter();
+    const onClickToColumn = (id: number) => {
+      router.push({
+        name: "column",
+        params: {
+          id,
+        },
+        query: {
+          num: id,
+        },
+      });
+    };
     return {
       ColumList,
+      onClickToColumn,
     };
   },
 });
