@@ -3,7 +3,7 @@
     <article v-for="item in list" :key="item._id" class="card mb-3 shadow-sm">
       <div class="card-body">
         <h4>
-          {{item.title}}
+          {{ item.title }}
         </h4>
         <div class="row my-3 align-items-center">
           <div v-if="item.image" class="col-3">
@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts">
-import {  defineComponent, PropType } from "vue";
-import {PostProps} from "../store";
+import { defineComponent, PropType } from "vue";
+import { PostProps } from "../store";
 export default defineComponent({
   name: "PostList",
   props: {
@@ -34,9 +34,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(){
-    return {}
-  }
+  setup() {
+    return {};
+  },
 });
 </script>
 

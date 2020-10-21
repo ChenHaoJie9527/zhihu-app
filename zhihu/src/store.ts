@@ -1,4 +1,4 @@
-import { createStore } from "vuex";
+import { createStore, Commit } from "vuex";
 // import { testPosts } from "./testData";
 import axios from "axios";
 interface AvatarType {
@@ -36,7 +36,15 @@ export interface GlobalDataProps {
     columns: ColumnProps[];
     posts: PostProps[];
     user: UserProps;
+    loading: boolean;
 }
+
+// Action函数
+const asyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
+    const { data } = await axios.get(url);
+    commit(mutationsName, data);
+}
+
 export const store = createStore<GlobalDataProps>({
     state: {
         columns: [],
@@ -44,8 +52,9 @@ export const store = createStore<GlobalDataProps>({
         user: {
             isLogin: true,
             name: "viking",
-            columnId: 1
-        }
+            columnId: 1,
+        },
+        loading: false
     },
     getters: {
         getColumns: state => (id: string) => {
@@ -77,23 +86,26 @@ export const store = createStore<GlobalDataProps>({
         },
         fetchPosts(state, PostsData) {
             state.posts = PostsData.data.list;
+        },
+        setLoading(state, status) {
+            state.loading = status;
         }
     },
     actions: {
-        fetchColumns({ commit }) {
-            axios.get("/columns").then(res => {
-                commit("fetchColumns", res.data);
-            })
+        async fetchColumns({ commit }) {
+            // const { data } = await axios.get("/columns");
+            // commit("fetchColumns", data);
+            asyncFunc(commit, "/columns", "fetchColumns");
         },
-        fetchColumn({ commit }, cid) {
-            axios.get(`/columns/${cid}`).then(res => {
-                commit("fetchColumn", res.data);
-            })
+        async fetchColumn({ commit }, cid) {
+            // const { data } = await axios.get(`/columns/${cid}`);
+            // commit("fetchColumn", data);
+            asyncFunc(commit, `/columns/${cid}`, "fetchColumn");
         },
-        fetchPosts({ commit }, cid) {
-            axios.get(`/columns/${cid}/posts`).then(res => {
-                commit("fetchPosts", res.data);
-            })
+        async fetchPosts({ commit }, cid) {
+            // const { data } = await axios.get(`/columns/${cid}/posts`);
+            // commit("fetchPosts", data);
+            asyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
         }
     }
 }); 
