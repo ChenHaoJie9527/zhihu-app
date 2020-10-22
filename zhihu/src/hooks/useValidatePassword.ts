@@ -1,4 +1,4 @@
-import { reactive, SetupContext, watch } from "vue";
+import { reactive, SetupContext } from "vue";
 interface PasswordProps {
     val: string;
     message: string;
@@ -50,9 +50,7 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
         }
         return true;
     };
-    watch(passwordRef,()=>{
-        console.log(passwordRef.val,passwordRef.error);
-    })
+    
     return {
         passwordRef,
         passwordUpdate,

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
@@ -39,6 +39,10 @@ import ValidatePassword, {
 } from "../components/ValidatePassword.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
+interface PayloadProps {
+  email: Ref<any>;
+  password: Ref<any>;
+}
 export default defineComponent({
   name: "login",
   components: {
@@ -53,10 +57,23 @@ export default defineComponent({
     const router = useRouter();
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        router.push({
-          name: "home"
-        })
-        store.commit("login")
+        // router.push({
+        //   name: "home",
+        // });
+        // store.commit("login");
+        const payload: PayloadProps = {
+          email: inputRef.value,
+          password: passwordRef1.value,
+        };
+        store.dispatch("login", payload).then((res) => {
+          router.push({
+            name: "home",
+          });
+          store.state.user = {
+            isLogin: true,
+            name: "vikeet",
+          };
+        });
       }
     };
     const emailRules: RulesProp = [

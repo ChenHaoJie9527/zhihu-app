@@ -38,6 +38,7 @@ export interface GlobalDataProps {
     posts: PostProps[];
     user: UserProps;
     loading: boolean;
+    token: string;
 }
 
 // Action函数
@@ -54,16 +55,23 @@ const asyncFunc = async (commit: Commit, url: string, mutationsName: string) => 
     // commit("setLoading", false);
 }
 
+const asyncLogin = async (commit: Commit, url: string, mutationsName: string, payload: object) => {
+    const { data } = await axios.post(url, payload);
+    commit(mutationsName, data);
+    return data;
+}
+
 export const store = createStore<GlobalDataProps>({
     state: {
         columns: [],
         posts: [],
         user: {
-            isLogin: true,
+            isLogin: false,
             name: "viking",
             columnId: 1,
         },
-        loading: false
+        loading: false,
+        token: "",
     },
     getters: {
         getColumns: state => (id: string) => {
@@ -80,13 +88,13 @@ export const store = createStore<GlobalDataProps>({
         }
     },
     mutations: {
-        login(state) {
-            state.user = {
-                ...state.user,
-                isLogin: true,
-                name: "vikeet"
-            }
-        },
+        // login(state) {
+        //     state.user = {
+        //         ...state.user,
+        //         isLogin: true,
+        //         name: "vikeet"
+        //     }
+        // },
         createPost(state, data) {
             state.posts.push(data)
         },
@@ -101,6 +109,10 @@ export const store = createStore<GlobalDataProps>({
         },
         setLoading(state, status) {
             state.loading = status;
+        },
+        login(state, rawdata) {
+            // console.log(rawdata);
+            state.token = rawdata.data.token;
         }
     },
     actions: {
@@ -118,6 +130,9 @@ export const store = createStore<GlobalDataProps>({
             // const { data } = await axios.get(`/columns/${cid}/posts`);
             // commit("fetchPosts", data);
             asyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
+        },
+        async login({ commit }, payload) {
+            return asyncLogin(commit, `/user/login`, "login", payload);
         }
     }
 }); 

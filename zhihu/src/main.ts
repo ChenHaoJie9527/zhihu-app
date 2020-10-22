@@ -5,6 +5,9 @@ import { store } from "./store";
 import axios from "axios";
 axios.defaults.baseURL = "http://apis.imooc.com/api";
 axios.interceptors.request.use(config => {
+    if (config.method !== "GET") {
+        config.data = { ...config.data, icode: "E219C6BE1D9368AF" }
+    }
     config.params = { ...config.params, icode: "E219C6BE1D9368AF" };
     store.commit("setLoading", true);
     return config;
