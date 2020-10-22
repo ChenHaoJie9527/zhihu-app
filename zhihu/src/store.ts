@@ -23,11 +23,13 @@ export interface PostProps {
     createAt?: string;
     column: string;
 }
-interface UserProps {
+export interface UserProps {
     isLogin: boolean;
-    name?: string;
-    id?: number;
-    columnId?: number;
+    nickName?: string;
+    _id?: string;
+    column?: string;
+    email?: string;
+    description?: string;
 }
 export interface GetPops {
     getColumns(): void;
@@ -67,8 +69,7 @@ export const store = createStore<GlobalDataProps>({
         posts: [],
         user: {
             isLogin: false,
-            name: "viking",
-            columnId: 1,
+
         },
         loading: false,
         token: "",
@@ -88,13 +89,6 @@ export const store = createStore<GlobalDataProps>({
         }
     },
     mutations: {
-        // login(state) {
-        //     state.user = {
-        //         ...state.user,
-        //         isLogin: true,
-        //         name: "vikeet"
-        //     }
-        // },
         createPost(state, data) {
             state.posts.push(data)
         },
@@ -114,6 +108,12 @@ export const store = createStore<GlobalDataProps>({
             const token = rawdata.data.token;
             state.token = token;
             axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+        },
+        fetchCurrentUser(state, rawdata) {
+            state.user = {
+                isLogin: true,
+                ...rawdata.data
+            }
         }
     },
     actions: {
@@ -134,6 +134,15 @@ export const store = createStore<GlobalDataProps>({
         },
         async login({ commit }, payload) {
             return asyncLogin(commit, `/user/login`, "login", payload);
+        },
+        async fetchCurrentUser({ commit }) {
+            asyncFunc(commit, `/user/current`, "fetchCurrentUser");
+        },
+        //组合actions 将多个异步方法组合起来使用
+        loginAndFetchCurrentUser({ dispatch }, loginData) {
+            return dispatch("login", loginData).then(res => {
+                return dispatch("fetchCurrentUser");
+            })
         }
     }
 }); 

@@ -64,8 +64,8 @@ export default defineComponent({
     ];
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        const { columnId } = store.state.user;
-        if (columnId) {
+        const { column } = store.state.user;
+        if (column) {
           const newPost: PostProps = {
               _id: new Date().getTime(),
               title: titleVal.value,
@@ -77,7 +77,7 @@ export default defineComponent({
           router.push({
               name: "column",
               params: {
-                  id: columnId
+                  id: column
               }
           })
         }
