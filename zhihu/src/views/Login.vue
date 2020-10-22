@@ -57,10 +57,6 @@ export default defineComponent({
     const router = useRouter();
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        // router.push({
-        //   name: "home",
-        // });
-        // store.commit("login");
         const payload: PayloadProps = {
           email: inputRef.value,
           password: passwordRef1.value,
