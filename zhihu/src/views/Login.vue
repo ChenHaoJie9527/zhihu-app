@@ -69,10 +69,7 @@ export default defineComponent({
           router.push({
             name: "home",
           });
-          store.state.user = {
-            isLogin: true,
-            name: "vikeet",
-          };
+         
         });
       }
     };

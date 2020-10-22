@@ -111,8 +111,9 @@ export const store = createStore<GlobalDataProps>({
             state.loading = status;
         },
         login(state, rawdata) {
-            // console.log(rawdata);
-            state.token = rawdata.data.token;
+            const token = rawdata.data.token;
+            state.token = token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         }
     },
     actions: {
