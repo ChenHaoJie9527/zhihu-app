@@ -61,12 +61,16 @@ export default defineComponent({
           email: inputRef.value,
           password: passwordRef1.value,
         };
-        store.dispatch("loginAndFetchCurrentUser", payload).then((res) => {
-          router.push({
-            name: "home",
+        store
+          .dispatch("loginAndFetchCurrentUser", payload)
+          .then((res) => {
+            router.push({
+              name: "home",
+            });
+          })
+          .catch((e) => {
+            console.log(e);
           });
-         
-        });
       }
     };
     const emailRules: RulesProp = [

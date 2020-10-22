@@ -40,6 +40,12 @@ export interface GlobalDataProps {
     user: UserProps;
     loading: boolean;
     token: string;
+    error: GlobalError;
+}
+
+export interface GlobalError {
+    status: boolean;
+    message?: string;
 }
 
 // Action函数
@@ -71,6 +77,9 @@ export const store = createStore<GlobalDataProps>({
         },
         loading: false,
         token: localStorage.getItem("token") || "",
+        error: {
+            status: false
+        }
     },
     getters: {
         getColumns: state => (id: string) => {
@@ -113,6 +122,9 @@ export const store = createStore<GlobalDataProps>({
                 isLogin: true,
                 ...rawdata.data
             }
+        },
+        setError(state, e: GlobalError) {
+            state.error = e;
         }
     },
     actions: {
@@ -139,7 +151,6 @@ export const store = createStore<GlobalDataProps>({
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {
-            console.log("loginData", loginData);
             return dispatch("login", loginData).then(res => {
                 return dispatch("fetchCurrentUser");
             })

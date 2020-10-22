@@ -6,6 +6,7 @@
       text="拼命加载中"
       background="rgba(0,0,0,0.8)"
     ></Loading>
+    <h2>{{error.message}}</h2>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -62,9 +63,11 @@ export default defineComponent({
         store.dispatch("fetchCurrentUser");
       }
     });
+    const error = computed(()=> store.state.error);
     return {
       currentUser,
       isLoading,
+      error
     };
   },
 });
