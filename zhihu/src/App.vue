@@ -6,7 +6,7 @@
       text="拼命加载中"
       background="rgba(0,0,0,0.8)"
     ></Loading>
-    <h2>{{error.message}}</h2>
+    <Message type="error" :message="error.message" v-if="error.status"></Message>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -30,6 +30,7 @@ import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
 import Loading from "./components/Loading.vue";
 import axios from "axios";
+import Message from "./components/Message.vue";
 interface EmailProps {
   val: string;
   message: string;
@@ -51,6 +52,7 @@ export default defineComponent({
   components: {
     GlobalHearder,
     Loading,
+    Message
   },
   setup() {
     const store = useStore<GlobalDataProps>();

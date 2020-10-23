@@ -63,7 +63,7 @@ export default defineComponent({
         };
         store
           .dispatch("loginAndFetchCurrentUser", payload)
-          .then((res) => {
+          .then(() => {
             router.push({
               name: "home",
             });
