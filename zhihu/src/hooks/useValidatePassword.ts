@@ -5,8 +5,9 @@ interface PasswordProps {
     error: boolean;
 }
 interface RuleProp {
-    type: "text" | "password" | "required";
+    type: "text" | "password" | "required" | "custom";
     message: string;
+    validator?: () => void;
 }
 type RulesPropType = RuleProp[];
 interface P1 {

@@ -30,8 +30,9 @@ import { defineComponent, onMounted, PropType } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
 import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
-  type: "text" | "password" | "required";
+  type: "text" | "password" | "required" | "custom";
   message: string;
+  validator?: () => void;
 }
 export type tagType = "input" | "textarea";
 export type RulesPropType = RuleProp[];

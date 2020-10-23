@@ -11,7 +11,7 @@
         >
       </li>
       <li class="list-inline-item mb-1">
-        <a href="#" class="btn btn-outline-dark my-2">注册</a>
+        <a href="#" class="btn btn-outline-dark my-2" @click.prevent="onClickToSingUp">注册</a>
       </li>
     </ul>
     <ul v-else class="list-inline mb-1">
@@ -67,9 +67,15 @@ export default defineComponent({
         name: "create",
       });
     };
+    const onClickToSingUp = () => {
+      router.push({
+        name: "singup"
+      })
+    }
     return {
       onClickToLogin,
       onCreateNewPost,
+      onClickToSingUp
     };
   },
 });

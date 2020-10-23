@@ -12,10 +12,10 @@
       {{ inputRef.message }}
     </span>
   </div>
-</template>
+</template> 
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, PropType, watch } from "vue";
 import { emitter } from "./ValidateForm.vue";
 import useValidate from "../hooks/useValidate";
 interface RuleProp {

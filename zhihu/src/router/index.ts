@@ -34,6 +34,11 @@ const router = createRouter({
             meta: {
                 requiredLogin: true
             }
+        },
+        {
+            path: "/singup",
+            name: "singup",
+            component: ()=> import("../views/SingUp.vue")
         }
     ]
 });
