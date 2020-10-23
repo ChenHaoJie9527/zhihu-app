@@ -37,6 +37,7 @@ import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
 import ValidatePassword, {
   RulesPropType,
 } from "../components/ValidatePassword.vue";
+import CreateMessage from "../hooks/createMessage";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
 interface PayloadProps {
@@ -64,9 +65,12 @@ export default defineComponent({
         store
           .dispatch("loginAndFetchCurrentUser", payload)
           .then(() => {
-            router.push({
-              name: "home",
-            });
+            CreateMessage("登录成功，2秒后跳转", "success");
+            setTimeout(() => {
+              router.push({
+                name: "home",
+              });
+            }, 2000);
           })
           .catch((e) => {
             console.log(e);

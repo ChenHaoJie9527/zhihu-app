@@ -19,6 +19,10 @@ axios.interceptors.request.use(config => {
         // 普通的 body 对象，添加到 data 中
         config.data = { ...config.data, icode: "E219C6BE1D9368AF" };
     }
+    store.commit("setError", {
+        status: false,
+        message: ""
+    });
     store.commit("setLoading", true);
     return config;
 });

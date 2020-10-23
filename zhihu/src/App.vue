@@ -6,7 +6,6 @@
       text="拼命加载中"
       background="rgba(0,0,0,0.8)"
     ></Loading>
-    <Message type="error" :message="error.message" v-if="error.status"></Message>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -24,13 +23,13 @@
 
 <script lang="ts">
 import "bootstrap/dist/css/bootstrap.min.css";
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import GlobalHearder from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "./store";
 import Loading from "./components/Loading.vue";
 import axios from "axios";
-import Message from "./components/Message.vue";
+import CreateMessage from "./hooks/createMessage";
 interface EmailProps {
   val: string;
   message: string;
@@ -52,7 +51,6 @@ export default defineComponent({
   components: {
     GlobalHearder,
     Loading,
-    Message
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -65,11 +63,17 @@ export default defineComponent({
         store.dispatch("fetchCurrentUser");
       }
     });
-    const error = computed(()=> store.state.error);
+    const error = computed(() => store.state.error);
+    watch(error, () => {
+      const { status, message } = error.value;
+      if (status && message) {
+        CreateMessage(message, "error");
+      }
+    });
     return {
       currentUser,
       isLoading,
-      error
+      error,
     };
   },
 });

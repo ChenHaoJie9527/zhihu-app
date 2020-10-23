@@ -5,7 +5,7 @@
       :class="classObj"
       v-if="isShow"
     >
-      <strong>{{ message }}!</strong>
+      <span>{{ message }}</span>
       <button
         type="button"
         class="close"
@@ -60,5 +60,6 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
+
 </style>
