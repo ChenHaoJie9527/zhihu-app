@@ -30,8 +30,9 @@ import { defineComponent, onMounted, PropType, watch } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
 import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
-  type: "text" | "password" | "required";
+  type: "text" | "password" | "required" | "custom";
   message: string;
+  validator?: () => void;
 }
 export type tagType = "input" | "textarea";
 export type RulesPropType = RuleProp[];
@@ -48,6 +49,7 @@ export default defineComponent({
   },
   inheritAttrs: false, // inheritAttrs 禁用子组件根节点继承子组件非prop属性
   setup(props, context) {
+    console.log(props.rules)
     const {
       passwordRef,
       passwordUpdate,
@@ -56,7 +58,6 @@ export default defineComponent({
     onMounted(() => {
       emitter.emit("form-item-create", validatePassword);
     });
-    console.log(props.tag)
     watch(props,()=>{
       console.log("tag",props.tag)
 

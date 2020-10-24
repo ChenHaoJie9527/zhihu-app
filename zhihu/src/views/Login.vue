@@ -30,15 +30,20 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
 import ValidatePassword, {
   RulesPropType,
 } from "../components/ValidatePassword.vue";
+import CreateMessage from "../hooks/createMessage";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
+interface PayloadProps {
+  email: Ref<any>;
+  password: Ref<any>;
+}
 export default defineComponent({
   name: "login",
   components: {
@@ -53,10 +58,23 @@ export default defineComponent({
     const router = useRouter();
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        router.push({
-          name: "home"
-        })
-        store.commit("login")
+        const payload: PayloadProps = {
+          email: inputRef.value,
+          password: passwordRef1.value,
+        };
+        store
+          .dispatch("loginAndFetchCurrentUser", payload)
+          .then(() => {
+            CreateMessage("登录成功，2秒后跳转", "success");
+            setTimeout(() => {
+              router.push({
+                name: "home",
+              });
+            }, 2000);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     };
     const emailRules: RulesProp = [

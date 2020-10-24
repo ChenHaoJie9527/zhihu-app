@@ -11,14 +11,16 @@
         >
       </li>
       <li class="list-inline-item mb-1">
-        <a href="#" class="btn btn-outline-dark my-2" >注册</a>
+        <a href="#" class="btn btn-outline-dark my-2" @click.prevent="onClickToSingUp">注册</a>
       </li>
     </ul>
     <ul v-else class="list-inline mb-1">
       <li class="list-inline-item">
-        <DropDown :title="`您好${user.name ? user.name : 'vikkit'}`">
+        <DropDown :title="`您好${user.nickName ? user.nickName : 'vikkit'}`">
           <DropddownItem>
-            <a href="#" class="dropdown-item" @click.prevent="onCreateNewPost">新建文章</a>
+            <a href="#" class="dropdown-item" @click.prevent="onCreateNewPost"
+              >新建文章</a
+            >
           </DropddownItem>
           <DropddownItem disabled>
             <a href="#" class="dropdown-item">我的专栏</a>
@@ -40,11 +42,7 @@ import { defineComponent, PropType } from "vue";
 import DropDown from "./Dropdown.vue";
 import DropddownItem from "./DropddownItem.vue";
 import { useRouter } from "vue-router";
-export interface UserProps {
-  isLogin: boolean;
-  name?: string;
-  id?: number;
-}
+import { UserProps } from "../store";
 export default defineComponent({
   name: "GlobalHearder",
   components: {
@@ -61,17 +59,23 @@ export default defineComponent({
     const router = useRouter();
     const onClickToLogin = () => {
       router.push({
-        name: "login"
-      })
+        name: "login",
+      });
     };
     const onCreateNewPost = () => {
       router.push({
-        name: "create"
+        name: "create",
+      });
+    };
+    const onClickToSingUp = () => {
+      router.push({
+        name: "singup"
       })
     }
     return {
       onClickToLogin,
-      onCreateNewPost
+      onCreateNewPost,
+      onClickToSingUp
     };
   },
 });

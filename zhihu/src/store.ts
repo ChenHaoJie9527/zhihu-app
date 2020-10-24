@@ -1,7 +1,6 @@
 import { createStore, Commit } from "vuex";
 // import { testPosts } from "./testData";
 import axios from "axios";
-import { resolve } from 'path';
 interface AvatarType {
     url: string;
     _id: string;
@@ -23,11 +22,13 @@ export interface PostProps {
     createAt?: string;
     column: string;
 }
-interface UserProps {
+export interface UserProps {
     isLogin: boolean;
-    name?: string;
-    id?: number;
-    columnId?: number;
+    nickName?: string;
+    _id?: string;
+    column?: string;
+    email?: string;
+    description?: string;
 }
 export interface GetPops {
     getColumns(): void;
@@ -38,10 +39,17 @@ export interface GlobalDataProps {
     posts: PostProps[];
     user: UserProps;
     loading: boolean;
+    token: string;
+    error: GlobalError;
+}
+
+export interface GlobalError {
+    status: boolean;
+    message?: string;
 }
 
 // Action函数
-const asyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
+const getasyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
     // 请求开始时显示loading
     // commit("setLoading", true);
     const { data } = await axios.get(url);
@@ -54,16 +62,24 @@ const asyncFunc = async (commit: Commit, url: string, mutationsName: string) => 
     // commit("setLoading", false);
 }
 
+const postasyncLogin = async (commit: Commit, url: string, mutationsName: string, payload: object) => {
+    const { data } = await axios.post(url, payload);
+    commit(mutationsName, data);
+    return data;
+}
+
 export const store = createStore<GlobalDataProps>({
     state: {
         columns: [],
         posts: [],
         user: {
-            isLogin: true,
-            name: "viking",
-            columnId: 1,
+            isLogin: false,
         },
-        loading: false
+        loading: false,
+        token: localStorage.getItem("token") || "",
+        error: {
+            status: false
+        }
     },
     getters: {
         getColumns: state => (id: string) => {
@@ -80,13 +96,6 @@ export const store = createStore<GlobalDataProps>({
         }
     },
     mutations: {
-        login(state) {
-            state.user = {
-                ...state.user,
-                isLogin: true,
-                name: "vikeet"
-            }
-        },
         createPost(state, data) {
             state.posts.push(data)
         },
@@ -101,23 +110,44 @@ export const store = createStore<GlobalDataProps>({
         },
         setLoading(state, status) {
             state.loading = status;
+        },
+        login(state, rawdata) {
+            const token = rawdata.data.token;
+            localStorage.setItem("token", token);
+            state.token = token;
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+        },
+        fetchCurrentUser(state, rawdata) {
+            state.user = {
+                isLogin: true,
+                ...rawdata.data
+            }
+        },
+        setError(state, e: GlobalError) {
+            state.error = e;
         }
     },
     actions: {
         async fetchColumns({ commit }) {
-            // const { data } = await axios.get("/columns");
-            // commit("fetchColumns", data);
-            asyncFunc(commit, "/columns", "fetchColumns");
+            return getasyncFunc(commit, "/columns", "fetchColumns");
         },
         async fetchColumn({ commit }, cid) {
-            // const { data } = await axios.get(`/columns/${cid}`);
-            // commit("fetchColumn", data);
-            asyncFunc(commit, `/columns/${cid}`, "fetchColumn");
+            return getasyncFunc(commit, `/columns/${cid}`, "fetchColumn");
         },
         async fetchPosts({ commit }, cid) {
-            // const { data } = await axios.get(`/columns/${cid}/posts`);
-            // commit("fetchPosts", data);
-            asyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
+            return getasyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
+        },
+        async login({ commit }, payload) {
+            return postasyncLogin(commit, `/user/login`, "login", payload);
+        },
+        async fetchCurrentUser({ commit }) {
+            return getasyncFunc(commit, `/user/current`, "fetchCurrentUser");
+        },
+        //组合actions 将多个异步方法组合起来使用
+        loginAndFetchCurrentUser({ dispatch }, loginData) {
+            return dispatch("login", loginData).then(res => {
+                return dispatch("fetchCurrentUser");
+            })
         }
     }
 }); 

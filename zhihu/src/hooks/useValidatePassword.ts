@@ -1,12 +1,13 @@
-import { reactive, SetupContext, watch } from "vue";
+import { reactive, SetupContext } from "vue";
 interface PasswordProps {
     val: string;
     message: string;
     error: boolean;
 }
 interface RuleProp {
-    type: "text" | "password" | "required";
+    type: "text" | "password" | "required" | "custom";
     message: string;
+    validator?: () => void;
 }
 type RulesPropType = RuleProp[];
 interface P1 {
@@ -31,7 +32,7 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
     const validatePassword = () => {
         if (props.rules) {
             const allpassword = props.rules.every(item => {
-                let passw = true;
+                let passw= true;
                 passwordRef.message = item.message;
                 switch (item.type) {
                     case "required":
@@ -39,6 +40,9 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
                         break;
                     case "password":
                         passw = password.test(passwordRef.val)
+                        break;
+                    case "custom":
+                        passw = item.validator ? (item.validator() as unknown as boolean) : true;
                         break;
                     default:
                         break;
@@ -50,9 +54,7 @@ const useValidatePassword = (props: passwordType, context: passwordContextType) 
         }
         return true;
     };
-    watch(passwordRef,()=>{
-        console.log(passwordRef.val,passwordRef.error);
-    })
+
     return {
         passwordRef,
         passwordUpdate,
