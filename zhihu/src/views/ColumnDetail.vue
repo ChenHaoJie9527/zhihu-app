@@ -1,14 +1,14 @@
 <template>
-  <div class="column-detail-page w-75 mx-auto">
+  <div class="column=detail-page w-75 mx-auto">
     <div
-      class="column-info row mb-4 border-bottom pb-4 align-items-center"
+      class="column-info row bm-4 border-bottom pb-4 align-items-center"
       v-if="column"
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar"
+          :src="column.avatar && column.avatar.url"
           :alt="column.title"
-          class="rounded-circle border"
+          class="rounded-circle border w-100"
         />
       </div>
       <div class="col-9">
@@ -21,11 +21,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 import PostList from "../components/PostList.vue";
 import { GlobalDataProps } from "../store";
-import { useStore } from "vuex";
 export default defineComponent({
   name: "ColumnDetail",
   components: {
@@ -33,13 +33,14 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>();
-    const routeID = +useRoute().params.id;
-    const column = computed(() => {
-      return store.getters.getColumnId(routeID);
+    const route = useRoute();
+    const currenID = route.params.id;
+    onMounted(() => {
+      store.dispatch("fetchColumn", currenID);
+      store.dispatch("fetchPosts", currenID);
     });
-    const list = computed(() => {
-      return store.getters.getColumnList(routeID);
-    });
+    const column = computed(() => store.getters.getColumns(currenID));
+    const list = computed(() => store.getters.getList(currenID));
     return {
       column,
       list,

@@ -3,7 +3,12 @@
     <a class="navbar-brand" href="#">知乎专栏</a>
     <ul v-if="!user.isLogin" class="list-inline mb-1">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-dark my-2" @click.prevent="onClickToLogin">登录</a>
+        <a
+          href="#"
+          class="btn btn-outline-dark my-2"
+          @click.prevent="onClickToLogin"
+          >登录</a
+        >
       </li>
       <li class="list-inline-item mb-1">
         <a href="#" class="btn btn-outline-dark my-2" >注册</a>
@@ -13,7 +18,7 @@
       <li class="list-inline-item">
         <DropDown :title="`您好${user.name ? user.name : 'vikkit'}`">
           <DropddownItem>
-            <a href="#" class="dropdown-item" @click.prevent="onClickCreatePost">新建文章</a>
+            <a href="#" class="dropdown-item" @click.prevent="onCreateNewPost">新建文章</a>
           </DropddownItem>
           <DropddownItem disabled>
             <a href="#" class="dropdown-item">我的专栏</a>
@@ -54,19 +59,19 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const onClickToLogin = ()=>{
+    const onClickToLogin = () => {
       router.push({
         name: "login"
       })
-    }
-    const onClickCreatePost = ()=>{
+    };
+    const onCreateNewPost = () => {
       router.push({
         name: "create"
       })
     }
     return {
       onClickToLogin,
-      onClickCreatePost
+      onCreateNewPost
     };
   },
 });

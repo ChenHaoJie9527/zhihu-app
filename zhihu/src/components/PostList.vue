@@ -1,15 +1,23 @@
 <template>
   <div class="post-list">
-    <article v-for="post in list" :key="post.id" class="card mb-3 shadow-sm">
+    <article v-for="item in list" :key="item._id" class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h4>{{ post.title }}</h4>
+        <h4>
+          {{ item.title }}
+        </h4>
         <div class="row my-3 align-items-center">
-          <div v-if="post.image" class="col-3">
-            <img :src="post.image" :alt="post.title" class="rounded-lg w-100" />
+          <div v-if="item.image" class="col-3">
+            <img
+              :src="item.image && item.image.url"
+              :alt="item.title"
+              class="rounded-lg w-100"
+            />
           </div>
-          <p :class="{ 'col-9': post.image }">{{ post.content }}</p>
+          <p :class="{ 'col-8': item.image }" class="text-muted">
+            {{ item.excerpt }}
+          </p>
         </div>
-        <span class="text-muted">{{ post.createdAt }}</span>
+        <span class="text-muted">{{ item.createAt }}</span>
       </div>
     </article>
   </div>
@@ -17,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { PostProps } from "../testData";
+import { PostProps } from "../store";
 export default defineComponent({
   name: "PostList",
   props: {
@@ -26,8 +34,15 @@ export default defineComponent({
       required: true,
     },
   },
+  setup() {
+    return {};
+  },
 });
 </script>
 
 <style scoped>
+.card-body img {
+  width: 100px;
+  height: 100px;
+}
 </style>

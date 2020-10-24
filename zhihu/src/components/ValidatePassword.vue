@@ -17,7 +17,8 @@
       :value="passwordRef.val"
       @input="passwordUpdate"
       v-bind="$attrs"
-    />
+      rows="30"
+    ></textarea>
     <span v-if="passwordRef.error" class="invalid-feedback">
       {{ passwordRef.message }}
     </span>
@@ -29,9 +30,10 @@ import { defineComponent, onMounted, PropType, watch } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
 import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
-  type: "password" | "required";
+  type: "text" | "password" | "required";
   message: string;
 }
+export type tagType = "input" | "textarea";
 export type RulesPropType = RuleProp[];
 export type TagType = "input" | "textarea";
 export default defineComponent({
@@ -40,7 +42,7 @@ export default defineComponent({
     rules: Array as PropType<RulesPropType>,
     modelValue: String,
     tag: {
-      type: String as PropType<TagType>,
+      type: String as PropType<tagType>,
       default: "input",
     },
   },

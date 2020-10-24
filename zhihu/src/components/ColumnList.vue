@@ -1,11 +1,11 @@
 <template>
   <div class="row">
-    <div class="col-4 mt-2" v-for="item in ColumList" :key="item.id">
-      <div class="card h-100 shadow-sm p-3 mb-5 bg-white rounded">
+    <div class="col-4 mb-4" v-for="item in ColumList" :key="item._id">
+      <div class="card h-100 shadow-sm p-3 mb-5">
         <div class="card-body text-center">
           <img
-            class="rounded-circle border border-light w-20 my-3"
-            :src="item.avatar"
+            class="rounded-circle border border-light my-3"
+            :src="item.avatar && item.avatar.url"
             :alt="item.title"
           />
           <div class="card-body">
@@ -16,7 +16,7 @@
             <div
               href="#"
               class="btn btn-outline-primary"
-              @click="onClickToColumn(item.id)"
+              @click="onClickToColumn(item._id)"
             >
               进入专栏
             </div>
@@ -31,13 +31,7 @@
 declare let require: any;
 import { computed, defineComponent, PropType } from "vue";
 import { useRouter } from "vue-router";
-export interface ColumnProps {
-  id: number;
-  title: string;
-  avatar?: string;
-  description: string;
-}
-
+import { ColumnProps } from "../store";
 export default defineComponent({
   name: "ColumnList",
   props: {
@@ -53,19 +47,18 @@ export default defineComponent({
       return props.list.map((item) => {
         if (!item.avatar) {
           item.avatar = require("../assets/avatar.jpg");
+        } else {
+          item.avatar.url = item.avatar.url + "?x-oss-process=image/resize,m_pad,h_50,w_50";
         }
         return item;
       });
     });
     const router = useRouter();
-    const onClickToColumn = (id: number) => {
+    const onClickToColumn = (id: string) => {
       router.push({
         name: "column",
         params: {
           id,
-        },
-        query: {
-          num: id,
         },
       });
     };
@@ -78,4 +71,8 @@ export default defineComponent({
 </script>
 
 <style scope>
+.card-body img {
+  width: 50px;
+  height: 50px;
+}
 </style>

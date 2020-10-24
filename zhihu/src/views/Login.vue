@@ -34,11 +34,11 @@ import {defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInputs, { RulesProp } from "../components/ValidateInput.vue";
-import { GlobalDataProps } from "../store";
 import ValidatePassword, {
   RulesPropType,
 } from "../components/ValidatePassword.vue";
 import { useStore } from "vuex";
+import { GlobalDataProps } from "../store";
 export default defineComponent({
   name: "login",
   components: {
@@ -47,14 +47,16 @@ export default defineComponent({
     ValidatePassword,
   },
   setup() {
+    const store = useStore<GlobalDataProps>();
     const inputRef = ref();
     const passwordRef1 = ref();
     const router = useRouter();
-    const store = useStore<GlobalDataProps>();
     const onFormSubmit = (val: boolean) => {
       if (val) {
-        router.push({ name: "home" });
-        store.commit("login");
+        router.push({
+          name: "home"
+        })
+        store.commit("login")
       }
     };
     const emailRules: RulesProp = [

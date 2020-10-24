@@ -18,11 +18,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
-import { GlobalDataProps } from "../store";
 import { useStore } from "vuex";
-// import { testData } from "../testData";
+import { GlobalDataProps } from "../store";
 export default defineComponent({
   name: "home",
   components: {
@@ -30,6 +29,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>();
+    onMounted(()=>{
+      store.dispatch("fetchColumns");
+    })
     const list = computed(()=>{
         return store.state.columns;
     })
