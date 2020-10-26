@@ -1,7 +1,11 @@
 import { createStore, Commit } from "vuex";
-// import { testPosts } from "./testData";
 import axios from "axios";
-interface AvatarType {
+export interface RespontenProps<P = {}> {
+    code: number;
+    msg: string;
+    data: P;
+}
+export interface AvatarType {
     url: string;
     _id: string;
 }
@@ -145,7 +149,7 @@ export const store = createStore<GlobalDataProps>({
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {
-            return dispatch("login", loginData).then(res => {
+            return dispatch("login", loginData).then(() => {
                 return dispatch("fetchCurrentUser");
             })
         }

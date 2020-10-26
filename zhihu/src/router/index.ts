@@ -4,7 +4,6 @@ import Login from "../views/Login.vue";
 import CreatePost from "../views/CreatePost.vue";
 import ColumnDetail from "../views/ColumnDetail.vue";
 import { store } from "../store";
-import axios from "axios";
 const routerHistory = createWebHashHistory(); // 使用web HTML5 history模式
 
 const router = createRouter({

@@ -15,9 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import axios from "axios";
 type UploaderStatus = "ready" | "loading" | "success" | "error";
+type ChangeFunc = (file: File) => boolean;
 export default defineComponent({
   name: "uploader",
   props: {
@@ -25,8 +26,12 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    beforeUpload: {
+      type: Function as PropType<ChangeFunc>,
+    },
   },
-  setup(props) {
+  emits: ["file-uploaded", "file-uploader-error"],
+  setup(props, context) {
     const fileInput = ref<null | HTMLInputElement>(null);
     const fileStatus = ref<UploaderStatus>("ready");
     const triggerUploader = () => {
@@ -37,8 +42,14 @@ export default defineComponent({
     const onUploader = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files) {
-        fileStatus.value = "loading";
         const files = Array.from(target.files);
+        if (props.beforeUpload) {
+          const reslut = props.beforeUpload(files[0]);
+          if (!reslut) {
+            return;
+          }
+        }
+        fileStatus.value = "loading";
         const formData = new FormData();
         formData.append("file", files[0]);
         const res = axios.post(props.action, formData, {
@@ -49,11 +60,11 @@ export default defineComponent({
         res
           .then((res) => {
             fileStatus.value = "success";
-            console.log(res);
+            context.emit("file-uploaded", res.data);
           })
           .catch((e) => {
             fileStatus.value = "error";
-            console.log(e);
+            context.emit("file-uploader-error", { e });
           })
           .finally(() => {
             if (fileInput.value) {
