@@ -9,11 +9,14 @@
         </p>
       </div>
     </section>
+    
     <h4 class="font-weight-bold text-center">发现精彩</h4>
+    <Uploader action="/upload"></Uploader>
     <ColumnList :list="list"></ColumnList>
     <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25">
       加载更多
     </button>
+    
   </div>
 </template>
 
@@ -22,21 +25,23 @@ import { computed, defineComponent, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
+import Uploader from "../components/Uploader.vue";
 export default defineComponent({
   name: "home",
   components: {
     ColumnList,
+    Uploader,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
-    onMounted(()=>{
+    onMounted(() => {
       store.dispatch("fetchColumns");
-    })
-    const list = computed(()=>{
-        return store.state.columns;
-    })
+    });
+    const list = computed(() => {
+      return store.state.columns;
+    });
     return {
-      list
+      list,
     };
   },
 });
