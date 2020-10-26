@@ -9,13 +9,17 @@
         </p>
       </div>
     </section>
-
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <Uploader
       action="/upload"
       :beforeUpload="beforeUpload"
       @file-uploaded="onFileLoaded"
-    ></Uploader>
+      @file-uploader-error="onFileLoadedError"
+    >
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" width="500">
+      </template>
+    </Uploader>
     <ColumnList :list="list"></ColumnList>
     <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25">
       加载更多
@@ -55,10 +59,14 @@ export default defineComponent({
     const onFileLoaded = (rawData: RespontenProps<AvatarType>) => {
       CreateMessage(`上传图片成功 ${rawData.data._id}`, "success");
     };
+    const onFileLoadedError = (e: Error) => {
+      CreateMessage(`出错！请重新上传 ${e.message}`, "error");
+    };
     return {
       list,
       beforeUpload,
       onFileLoaded,
+      onFileLoadedError,
     };
   },
 });
