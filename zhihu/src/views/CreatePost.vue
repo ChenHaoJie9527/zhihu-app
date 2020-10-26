@@ -1,6 +1,7 @@
 <template>
   <div class="create-post-page">
     <h3>新建文章</h3>
+    <input type="file" name="file" @change.prevent="onChangeFile" />
     <ValidateForm @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -38,6 +39,7 @@ import ValidatePassowrd, {
 } from "../components/ValidatePassword.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps, PostProps } from "../store";
+import axios from "axios";
 export default defineComponent({
   name: "create",
   components: {
@@ -67,20 +69,38 @@ export default defineComponent({
         const { column } = store.state.user;
         if (column) {
           const newPost: PostProps = {
-              _id: new Date().getTime(),
-              title: titleVal.value,
-              content: contentVal.value,
-              column: "",
-              createAt: new Date().toLocaleString()
+            _id: new Date().getTime(),
+            title: titleVal.value,
+            content: contentVal.value,
+            column: "",
+            createAt: new Date().toLocaleString(),
           };
-          store.commit("createPost",newPost);
+          store.commit("createPost", newPost);
           router.push({
-              name: "column",
-              params: {
-                  id: column
-              }
-          })
+            name: "column",
+            params: {
+              id: column,
+            },
+          });
         }
+      }
+    };
+    const onChangeFile = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+      if (files) {
+        const uploaderFiles = files[0];
+        const formData = new FormData();
+        formData.append(uploaderFiles.name, uploaderFiles);
+        axios
+          .post("/upload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log(res);
+          });
       }
     };
     return {
@@ -89,6 +109,7 @@ export default defineComponent({
       contentVal,
       titleRules,
       contentRules,
+      onChangeFile,
     };
   },
 });
