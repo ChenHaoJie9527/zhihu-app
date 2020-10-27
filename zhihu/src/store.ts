@@ -122,6 +122,11 @@ export const store = createStore<GlobalDataProps>({
         },
         setError(state, e: GlobalError) {
             state.error = e;
+        },
+        logout(state){
+            state.token = "";
+            localStorage.removeItem("token");
+            delete axios.defaults.headers.common.Authorization;
         }
     },
     actions: {

@@ -1,7 +1,21 @@
 <template>
   <div class="create-post-page">
     <h3>新建文章</h3>
-    <input type="file" name="file" @change.prevent="onChangeFile" />
+    <Uploader
+      action="/upload"
+      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+    >
+      <h2>点击上传图片</h2>
+      <template #loading>
+        <div style="display: flex; flex-direction: column; align-items: center">
+          <div class="spinner-border text-secondary" role="status"></div>
+          <p class="sr-only">Loading...</p>
+        </div>
+      </template>
+      <template #uploaded="dataProps">
+        <img id="uploadedImg" :src="dataProps.uploadedData.data.url" alt="" />
+      </template>
+    </Uploader>
     <ValidateForm @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -40,12 +54,14 @@ import ValidatePassowrd, {
 import { useStore } from "vuex";
 import { GlobalDataProps, PostProps } from "../store";
 import axios from "axios";
+import Uploader from "../components/Uploader.vue";
 export default defineComponent({
   name: "create",
   components: {
     ValidateForm,
     ValidateInput,
     ValidatePassowrd,
+    Uploader,
   },
   setup() {
     const titleVal = ref("");
@@ -85,35 +101,21 @@ export default defineComponent({
         }
       }
     };
-    const onChangeFile = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      const files = target.files;
-      if (files) {
-        const uploaderFiles = files[0];
-        const formData = new FormData();
-        formData.append(uploaderFiles.name, uploaderFiles);
-        axios
-          .post("/upload", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            console.log(res);
-          });
-      }
-    };
     return {
       onFormSubmit,
       titleVal,
       contentVal,
       titleRules,
       contentRules,
-      onChangeFile,
     };
   },
 });
 </script>
 
-<style>
+<style scoped>
+#uploadedImg {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
 </style>

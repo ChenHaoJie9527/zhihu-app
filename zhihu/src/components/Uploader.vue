@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="file-upload-container" @click.prevent="triggerUploader">
+    <div
+      class="file-upload-container"
+      @click.prevent="triggerUploader"
+      v-bind="$attrs"
+    >
       <slot v-if="fileStatus == 'loading'" name="loading">
         <button class="btn btn-primary" disabled>正在上传...</button>
       </slot>
@@ -11,21 +15,13 @@
       >
         <button class="btn btn-primary">上传成功</button>
       </slot>
-      <slot v-else-if="fileStatus == 'none'">
-        <button class=" d-none">点击上传</button>
-      </slot>
+      
       <slot v-else name="default">
         <button class="btn btn-primary">点击上传</button>
       </slot>
     </div>
-    <slot name="repeatUpload" v-if="repeatUploadStatus == 'repeatUpload'">
-      <button class="btn btn-primary" @click.prevent="triggerUploader">
-        重新上传
-      </button>
-    </slot>
-    <slot name="remove" v-if="removeUploaded == 'remove'">
-      <button class="btn btn-dark" @click.prevent="onRemoveUploaded">点击删除</button>
-    </slot>
+    
+    
     <input
       type="file"
       class="file-input d-none"
@@ -38,7 +34,11 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
 import axios from "axios";
-type UploaderStatus = "ready" | "loading" | "success" | "error" | "repeatUpload" | "remove" | "none";
+type UploaderStatus =
+  | "ready"
+  | "loading"
+  | "success"
+  | "error"
 type ChangeFunc = (file: File) => boolean;
 export default defineComponent({
   name: "uploader",
@@ -52,20 +52,17 @@ export default defineComponent({
     },
   },
   emits: ["file-uploaded", "file-uploader-error"],
+  inheritAttrs: false,
   setup(props, context) {
     const uploadedData = ref();
     const fileInput = ref<null | HTMLInputElement>(null);
     const fileStatus = ref<UploaderStatus>("ready");
-    const repeatUploadStatus = ref<UploaderStatus>();
-    const removeUploaded = ref<UploaderStatus>();
     const triggerUploader = () => {
       if (fileInput.value) {
         fileInput.value.click();
       }
     };
-    const onRemoveUploaded = ()=> {
-      fileStatus.value = "none";
-    }
+   
     const onUploader = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files) {
@@ -87,8 +84,6 @@ export default defineComponent({
         res
           .then((res) => {
             fileStatus.value = "success";
-            repeatUploadStatus.value = "repeatUpload";
-            removeUploaded.value = "remove";
             uploadedData.value = res.data;
             context.emit("file-uploaded", res.data);
           })
@@ -110,13 +105,14 @@ export default defineComponent({
       fileInput,
       fileStatus,
       uploadedData,
-      repeatUploadStatus,
-      removeUploaded,
-      onRemoveUploaded
     };
   },
 });
 </script>
 
 <style scoped>
+.file-upload-container {
+  height: 200px;
+  cursor: pointer;
+}
 </style>
