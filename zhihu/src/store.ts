@@ -22,9 +22,10 @@ export interface PostProps {
     title: string;
     content?: string;
     excerpt?: string;
-    image?: AvatarType;
+    image?: AvatarType | string;
     createAt?: string;
     column: string;
+    author?: string | number;
 }
 export interface UserProps {
     isLogin: boolean;
