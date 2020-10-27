@@ -6,8 +6,9 @@ export interface RespontenProps<P = {}> {
     data: P;
 }
 export interface AvatarType {
-    url: string;
-    _id: string;
+    url?: string;
+    _id?: string;
+    tacitlyUrl?: any;
 }
 export interface ColumnProps {
     _id: string;

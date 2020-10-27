@@ -6,7 +6,7 @@
     >
       <div class="col-3 text-center">
         <img
-          :src="column.avatar && column.avatar.url"
+          :src="column.avatar && column.avatar.tacitlyUrl"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
@@ -22,10 +22,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
+import { generateFitUrl } from "../hooks/Hleper";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import PostList from "../components/PostList.vue";
-import { GlobalDataProps } from "../store";
+import { GlobalDataProps, ColumnProps } from "../store";
 export default defineComponent({
   name: "ColumnDetail",
   components: {
@@ -39,7 +40,15 @@ export default defineComponent({
       store.dispatch("fetchColumn", currenID);
       store.dispatch("fetchPosts", currenID);
     });
-    const column = computed(() => store.getters.getColumns(currenID));
+    const column = computed(() => {
+      const selectColumn = store.getters.getColumns(currenID) as
+        | ColumnProps
+        | undefined;
+      if (selectColumn) {
+        generateFitUrl(selectColumn, 100, 100);
+      }
+      return selectColumn;
+    });
     const list = computed(() => store.getters.getList(currenID));
     return {
       column,
