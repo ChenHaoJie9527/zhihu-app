@@ -5,7 +5,11 @@
         <img src="../assets/callout.svg" alt="callout" class="w-50" />
         <h2 class="font-weight-light">随心写作，自由表达</h2>
         <p>
-          <a href="#" class="btn btn-primary my-2">开始写文章</a>
+          <a
+            href="#"
+            class="btn btn-primary my-2"
+            >开始写文章</a
+          >
         </p>
       </div>
     </section>
@@ -17,7 +21,7 @@
       @file-uploader-error="onFileLoadedError"
     >
       <template #uploaded="dataProps">
-        <img :src="dataProps.uploadedData.data.url" width="500">
+        <img :src="dataProps.uploadedData.data.url" width="500" />
       </template>
     </Uploader>
     <ColumnList :list="list"></ColumnList>
@@ -31,6 +35,7 @@
 import { computed, defineComponent, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { GlobalDataProps, RespontenProps, AvatarType } from "../store";
 import Uploader from "../components/Uploader.vue";
 import CreateMessage from "../hooks/createMessage";

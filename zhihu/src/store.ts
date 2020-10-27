@@ -54,16 +54,9 @@ export interface GlobalError {
 
 // Action函数
 const getasyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
-    // 请求开始时显示loading
-    // commit("setLoading", true);
     const { data } = await axios.get(url);
-
-    // 延迟两秒
-    // await new Promise(resolve => setTimeout(resolve, 2000));
-
     commit(mutationsName, data);
-    // 请求完成时关闭loading
-    // commit("setLoading", false);
+    return data;
 }
 
 const postasyncLogin = async (commit: Commit, url: string, mutationsName: string, payload: object) => {

@@ -4,6 +4,7 @@ import Login from "../views/Login.vue";
 import CreatePost from "../views/CreatePost.vue";
 import ColumnDetail from "../views/ColumnDetail.vue";
 import { store } from "../store";
+import axios from "axios";
 const routerHistory = createWebHashHistory(); // 使用web HTML5 history模式
 
 const router = createRouter({
@@ -38,56 +39,49 @@ const router = createRouter({
         {
             path: "/singup",
             name: "singup",
-            component: () => import("../views/SingUp.vue")
+            component: () => import("../views/SingUp.vue"),
+            meta: { redirectAlreadyLogin: true }
         }
     ]
 });
 
 router.beforeEach((to, from, next) => {
-    // const { user, token } = store.state;
-    // const { requiredLogin, readireactAlreadLogin } = to.meta;
-    // if (!user.isLogin) {
-    //     if (token) {
-    //         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    //         store.dispatch("fetchCurrentUser").then(() => {
-    //             if (readireactAlreadLogin) {
-    //                 next("/");
-    //             } else {
-    //                 next();
-    //             }
-    //         }).catch(e => {
-    //             console.log(e);
-    //             localStorage.removeItem("token");
-    //             next({
-    //                 name: "login"
-    //             })
-    //         })
-    //     }else {
-    //         if(requiredLogin){
-    //             next({name: "login"});
-    //         }else{
-    //             next();
-    //         }
-    //     }
-    // } else {
-    //     if(readireactAlreadLogin){
-    //         next("/");
-    //     }else {
-    //         next();
-    //     }
-    // }
-    if (to.meta.requiredLogin && !(store.getters.getUserIsLogin())) {
-        next({
-            name: "login"
-        });
-    }
-    else if (to.meta.readireactAlreadLogin && store.getters.getUserIsLogin()) {
-        next({
-            name: "home"
-        })
-    }
-    else {
-        next();
+    const { user, token } = store.state;
+    const { requiredLogin, readireactAlreadLogin } = to.meta;
+    if (!user.isLogin) {
+        if (token) {
+            console.log("123");
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            store.dispatch("fetchCurrentUser").then(() => {
+                if (readireactAlreadLogin) {
+                    console.log("101112");
+                    next("/");
+                } else {
+                    console.log("131415");
+                    next();
+                }
+            }).catch(e => {
+                console.log(e);
+                localStorage.removeItem("token");
+                next({
+                    name: "login"
+                })
+            })
+        } else {
+            if (requiredLogin) {
+                console.log("456");
+                next({ name: "login" });
+            } else {
+                console.log("789");
+                next();
+            }
+        }
+    } else {
+        if (readireactAlreadLogin) {
+            next("/");
+        } else {
+            next();
+        }
     }
 })
 
