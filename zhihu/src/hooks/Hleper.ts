@@ -18,7 +18,8 @@ export function generateFitUrl(column: ColumnProps, width: number, height: numbe
 export function beforUploadCheck(file: File, condition: CondiTionProps) {
     const { format, size } = condition;
     const isValidaFormat = format ? format.includes(file.type) : true;
-    const fileSize = (file.size / 1024 / 1024);
+    const fileSize = (file.size / 1024 / (1024 * 5)); //不超过5MB
+    
     const isValidaSize = size ? (fileSize < size) : true;
     let error: ErrorType = null;
     if (!isValidaFormat) {

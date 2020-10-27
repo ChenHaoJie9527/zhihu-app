@@ -19,7 +19,7 @@ export interface ColumnProps {
     key: number;
 }
 export interface PostProps {
-    _id: string | number;
+    _id?: string | number;
     title: string;
     content?: string;
     excerpt?: string;
@@ -61,7 +61,7 @@ const getasyncFunc = async (commit: Commit, url: string, mutationsName: string) 
     return data;
 }
 
-const postasyncLogin = async (commit: Commit, url: string, mutationsName: string, payload: object) => {
+const postAndCommit = async (commit: Commit, url: string, mutationsName: string, payload: object) => {
     const { data } = await axios.post(url, payload);
     commit(mutationsName, data);
     return data;
@@ -125,7 +125,7 @@ export const store = createStore<GlobalDataProps>({
         setError(state, e: GlobalError) {
             state.error = e;
         },
-        logout(state){
+        logout(state) {
             state.token = "";
             localStorage.removeItem("token");
             delete axios.defaults.headers.common.Authorization;
@@ -142,10 +142,13 @@ export const store = createStore<GlobalDataProps>({
             return getasyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
         },
         async login({ commit }, payload) {
-            return postasyncLogin(commit, `/user/login`, "login", payload);
+            return postAndCommit(commit, `/user/login`, "login", payload);
         },
         async fetchCurrentUser({ commit }) {
             return getasyncFunc(commit, `/user/current`, "fetchCurrentUser");
+        },
+        async createPost({ commit }, payload) {
+            return postAndCommit(commit,`/posts`,"createPost",payload);
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {

@@ -1,7 +1,7 @@
 <template>
   <div class="column=detail-page w-75 mx-auto">
     <div
-      class="column-info row bm-4 border-bottom pb-4 align-items-center"
+      class="column-info row bm-4  pb-4 align-items-center"
       v-if="column"
     >
       <div class="col-3 text-center">

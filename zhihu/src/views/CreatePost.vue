@@ -5,6 +5,7 @@
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
+      @file-uploaded="handFileUpload"
     >
       <h2>点击上传图片</h2>
       <template #loading>
@@ -55,7 +56,12 @@ import ValidatePassowrd, {
   RulesPropType,
 } from "../components/ValidatePassword.vue";
 import { useStore } from "vuex";
-import { GlobalDataProps, PostProps } from "../store";
+import {
+  GlobalDataProps,
+  PostProps,
+  RespontenProps,
+  AvatarType,
+} from "../store";
 import axios from "axios";
 import Uploader from "../components/Uploader.vue";
 export default defineComponent({
@@ -83,30 +89,42 @@ export default defineComponent({
         message: "文章详情不能为空",
       },
     ];
+    let imageId = "";
+    const handFileUpload = (rawData: RespontenProps<AvatarType>) => {
+      if (rawData.data._id) {
+        imageId = rawData.data._id;
+      }
+    };
     const onFormSubmit = (val: boolean) => {
       if (val) {
         const { column, _id } = store.state.user;
         if (column) {
           const newPost: PostProps = {
-            _id: new Date().getTime(),
             title: titleVal.value,
             content: contentVal.value,
-            column: "",
-            createAt: new Date().toLocaleString(),
+            column,
+            author: _id,
           };
-          store.commit("createPost", newPost);
-          router.push({
-            name: "column",
-            params: {
-              id: column,
-            },
+          if (imageId) {
+            newPost.image = imageId;
+          }
+          store.dispatch("createPost", newPost).then(() => {
+            createMessage("发表成功，2秒后跳转到文章详情", "success");
+            setTimeout(() => {
+              router.push({
+                name: "column",
+                params: {
+                  id: column,
+                },
+              });
+            });
           });
         }
       }
     };
     const uploadCheck = (file: File) => {
       const res = beforUploadCheck(file, {
-        format: ["image/jpeg", "image/png"],
+        format: ["image/jpeg", "image/png", "image/gif"],
         size: 1,
       });
       const { passed, error } = res;
@@ -127,6 +145,7 @@ export default defineComponent({
       titleRules,
       contentRules,
       uploadCheck,
+      handFileUpload,
     };
   },
 });
