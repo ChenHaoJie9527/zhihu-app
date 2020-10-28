@@ -42,7 +42,6 @@ export default defineComponent({
         return item;
       });
     });
-    console.log(post);
     return {
       post
     };

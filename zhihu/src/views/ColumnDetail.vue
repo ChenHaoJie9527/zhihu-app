@@ -1,9 +1,6 @@
 <template>
   <div class="column=detail-page w-75 mx-auto">
-    <div
-      class="column-info row bm-4  pb-4 align-items-center"
-      v-if="column"
-    >
+    <div class="column-info row bm-4 pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
         <img
           :src="column.avatar && column.avatar.tacitlyUrl"
@@ -12,7 +9,7 @@
         />
       </div>
       <div class="col-9">
-        <h4>{{ column.title }}</h4>
+        <h4>{{ column.title}}</h4>
         <p class="text-muted">{{ column.description }}</p>
       </div>
     </div>
@@ -22,7 +19,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
-import { generateFitUrl, addColumnAvatar } from "../hooks/Hleper";
+import { addColumnAvatar } from "../hooks/Hleper";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import PostList from "../components/PostList.vue";
@@ -45,7 +42,7 @@ export default defineComponent({
         | ColumnProps
         | undefined;
       if (selectColumn) {
-        generateFitUrl(selectColumn, 100, 100);
+        addColumnAvatar(selectColumn, 100, 100);
       }
       return selectColumn;
     });
