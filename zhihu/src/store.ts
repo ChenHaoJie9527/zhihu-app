@@ -8,15 +8,14 @@ export interface RespontenProps<P = {}> {
 export interface AvatarType {
     url?: string;
     _id?: string;
-    tacitlyUrl?: any;
+    tacitlyUrl?: string;
+    createdAt?: string;
 }
 export interface ColumnProps {
     _id: string;
     title: string;
     avatar?: AvatarType;
     description: string;
-    createdAt: string;
-    key: number;
 }
 export interface PostProps {
     _id?: string | number;
@@ -27,7 +26,9 @@ export interface PostProps {
     createAt?: string;
     column: string;
     author?: string | number;
+    isHTML?: boolean;
 }
+
 export interface UserProps {
     isLogin: boolean;
     nickName?: string;
@@ -35,6 +36,7 @@ export interface UserProps {
     column?: string;
     email?: string;
     description?: string;
+    avatar?: AvatarType;
 }
 export interface GetPops {
     getColumns(): void;
@@ -55,7 +57,7 @@ export interface GlobalError {
 }
 
 // Action函数
-const getasyncFunc = async (commit: Commit, url: string, mutationsName: string) => {
+const getAndCommit = async (commit: Commit, url: string, mutationsName: string) => {
     const { data } = await axios.get(url);
     commit(mutationsName, data);
     return data;
@@ -92,6 +94,9 @@ export const store = createStore<GlobalDataProps>({
         },
         getLoading: state => () => {
             return state.loading;
+        },
+        getCurrentPost: state => (id: string)=> {
+            return state.posts.find(item => item._id == id);
         }
     },
     mutations: {
@@ -106,6 +111,9 @@ export const store = createStore<GlobalDataProps>({
         },
         fetchPosts(state, PostsData) {
             state.posts = PostsData.data.list;
+        },
+        fetchPost(state, rawdata) {
+            state.posts = [rawdata.data];
         },
         setLoading(state, status) {
             state.loading = status;
@@ -133,22 +141,25 @@ export const store = createStore<GlobalDataProps>({
     },
     actions: {
         async fetchColumns({ commit }) {
-            return getasyncFunc(commit, "/columns", "fetchColumns");
+            return getAndCommit(commit, "/columns", "fetchColumns");
         },
         async fetchColumn({ commit }, cid) {
-            return getasyncFunc(commit, `/columns/${cid}`, "fetchColumn");
+            return getAndCommit(commit, `/columns/${cid}`, "fetchColumn");
         },
         async fetchPosts({ commit }, cid) {
-            return getasyncFunc(commit, `/columns/${cid}/posts`, "fetchPosts");
+            return getAndCommit(commit, `/columns/${cid}/posts`, "fetchPosts");
+        },
+        async fetchPost({ commit }, id) {
+            return getAndCommit(commit, `/posts/${id}`, 'fetchPost');
         },
         async login({ commit }, payload) {
             return postAndCommit(commit, `/user/login`, "login", payload);
         },
         async fetchCurrentUser({ commit }) {
-            return getasyncFunc(commit, `/user/current`, "fetchCurrentUser");
+            return getAndCommit(commit, `/user/current`, "fetchCurrentUser");
         },
         async createPost({ commit }, payload) {
-            return postAndCommit(commit,`/posts`,"createPost",payload);
+            return postAndCommit(commit, `/posts`, "createPost", payload);
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {

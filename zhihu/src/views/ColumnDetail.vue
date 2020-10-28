@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
-import { generateFitUrl } from "../hooks/Hleper";
+import { generateFitUrl, addColumnAvatar } from "../hooks/Hleper";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import PostList from "../components/PostList.vue";

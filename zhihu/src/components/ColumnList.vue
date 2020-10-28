@@ -5,7 +5,7 @@
         <div class="card-body text-center">
           <img
             class="rounded-circle border border-light my-3"
-            :src="item.avatar && item.avatar.tacitlyUrl"
+            :src="item.avatar && item.avatar.tacitlyUrl || item.avatar.url"
             :alt="item.title"
           />
           <div class="card-body">
@@ -50,6 +50,7 @@ export default defineComponent({
         return item;
       });
     });
+    console.log(ColumList);
     const router = useRouter();
     const onClickToColumn = (id: string) => {
       router.push({

@@ -1,9 +1,9 @@
 <template>
   <div class="post-list">
-    <article v-for="item in list" :key="item._id" class="card mb-3 shadow-sm">
+    <article v-for="item in post" :key="item._id" class="card mb-3 shadow-sm">
       <div class="card-body">
         <h4>
-          {{ item.title }}
+          <router-link :to="`/posts/${item._id}`">{{ item.title }}</router-link>
         </h4>
         <div class="row my-3 align-items-center">
           <div v-if="item.image" class="col-3">
@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { PostProps } from "../store";
+import { computed, defineComponent, PropType } from "vue";
+import { generateFitUrl } from "../hooks/Hleper";
+import { PostProps, AvatarType } from "../store";
 export default defineComponent({
   name: "PostList",
   props: {
@@ -34,8 +35,17 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
-    return {};
+  setup(props) {
+    const post = computed(() => {
+      return props.list.map((item) => {
+        generateFitUrl(item.image as AvatarType, 200, 100, ["m_fill"]);
+        return item;
+      });
+    });
+    console.log(post);
+    return {
+      post
+    };
   },
 });
 </script>
