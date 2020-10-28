@@ -16,14 +16,12 @@ export function generateFitUrl(data: AvatarType, width: number | string, height:
 
 export function addColumnAvatar(data: ColumnProps | UserProps, width: number, height: number) {
     if (data.avatar) {
-        console.log(data);
         generateFitUrl(data.avatar, width, height)
     } else {
         const parseCol = data as ColumnProps;
         data.avatar = {
             tacitlyUrl: require(parseCol.title ? "../assets/column.jpg" : "../assets/avatar.jpg")
         }
-        console.log(data.avatar.tacitlyUrl);
     }
 }
 

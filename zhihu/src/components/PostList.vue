@@ -50,6 +50,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.post-list h4 a {
+  text-decoration: none;
+  color: #1a1a1a;
+}
+.post-list h4 a:hover {
+  color: #0d6efd;
+}
 .card-body img {
   width: 100px;
   height: 100px;

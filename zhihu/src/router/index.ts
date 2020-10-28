@@ -41,6 +41,14 @@ const router = createRouter({
             name: "singup",
             component: () => import("../views/SingUp.vue"),
             meta: { redirectAlreadyLogin: true }
+        },
+        {
+            path: "/posts/:id",
+            name: "posts",
+            component: () => import("../views/PostDetail.vue"),
+            meta: {
+                name: "posts-detail"
+            }
         }
     ]
 });

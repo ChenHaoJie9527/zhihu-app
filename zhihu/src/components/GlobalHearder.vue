@@ -11,19 +11,22 @@
         >
       </li>
       <li class="list-inline-item mb-1">
-        <a href="#" class="btn btn-outline-dark my-2" @click.prevent="onClickToSingUp">注册</a>
+        <a
+          href="#"
+          class="btn btn-outline-dark my-2"
+          @click.prevent="onClickToSingUp"
+          >注册</a
+        >
       </li>
     </ul>
     <ul v-else class="list-inline mb-1">
       <li class="list-inline-item">
         <DropDown :title="`您好${user.nickName ? user.nickName : 'vikkit'}`">
           <DropddownItem>
-            <a href="#" class="dropdown-item" @click.prevent="onCreateNewPost"
-              >新建文章</a
-            >
+            <router-link class="dropdown-item" :to="`/create`">新建文章</router-link>
           </DropddownItem>
           <DropddownItem disabled>
-            <a href="#" class="dropdown-item">我的专栏</a>
+            <router-link :to="`/column/${user.column}`" class="dropdown-item">我的专栏</router-link>
           </DropddownItem>
           <DropddownItem disabled>
             <a href="#" class="dropdown-item">编辑资料</a>
@@ -55,8 +58,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const router = useRouter();
+
     const onClickToLogin = () => {
       router.push({
         name: "login",
@@ -69,13 +73,13 @@ export default defineComponent({
     };
     const onClickToSingUp = () => {
       router.push({
-        name: "singup"
-      })
-    }
+        name: "singup",
+      });
+    };
     return {
       onClickToLogin,
       onCreateNewPost,
-      onClickToSingUp
+      onClickToSingUp,
     };
   },
 });
