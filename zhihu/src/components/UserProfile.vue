@@ -2,7 +2,7 @@
   <div class="user-profile-component">
     <div class="d-flex align-items-center">
       <img
-        :src="user.avatar.url"
+        :src="fitUrl"
         :alt="user.nickName"
         class="rounded-circle img-thumbnail"
       />

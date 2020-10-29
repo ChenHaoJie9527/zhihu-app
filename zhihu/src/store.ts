@@ -19,12 +19,12 @@ export interface ColumnProps {
 }
 export interface PostProps {
     _id?: string | number;
-    title: string;
+    title?: string;
     content?: string;
     excerpt?: string;
     image?: AvatarType | string;
     createAt?: string;
-    column: string;
+    column?: string;
     author?: string | number;
     isHTML?: boolean;
 }
@@ -72,7 +72,7 @@ const postAndCommit = async (commit: Commit, url: string, mutationsName: string,
 export const store = createStore<GlobalDataProps>({
     state: {
         columns: [],
-        posts: [],
+        posts: [{ isHTML: false }],
         user: {
             isLogin: false,
         },
@@ -95,8 +95,12 @@ export const store = createStore<GlobalDataProps>({
         getLoading: state => () => {
             return state.loading;
         },
-        getCurrentPost: state => (id: string)=> {
-            return state.posts.find(item => item._id == id);
+        getCurrentPost: state => (id: string) => {
+            const arr = state.posts.find(item => item._id == id);
+            return {
+                isHTML: false,
+                ...arr
+            };
         }
     },
     mutations: {

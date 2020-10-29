@@ -6,7 +6,7 @@
           <router-link :to="`/posts/${item._id}`">{{ item.title }}</router-link>
         </h4>
         <div class="row my-3 align-items-center">
-          <div v-if="item.image" class="col-3">
+          <div v-if="item.image && typeof item.image !=='string'" class="col-3">
             <img
               :src="item.image && item.image.url"
               :alt="item.title"

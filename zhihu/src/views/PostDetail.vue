@@ -1,6 +1,6 @@
 <template>
   <div class="post-detail-page">
-    <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
+    <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost && typeof currentPost.image !== 'string'">
       <img
         :src="currentPost.image.url"
         :alt="currentPost.title"
@@ -14,7 +14,7 @@
       >
         <div class="col">
           <UserProfile
-            v-if="typeof currentPost.author === 'object'"
+            v-if="typeof currentPost.author !== 'string'"
             :user="currentPost.author"
           ></UserProfile>
         </div>
@@ -53,7 +53,8 @@ export default defineComponent({
     const currentHTML = computed(() => {
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
-        return isHTML? content : md.render(content);
+        //如果是false 说明不需要转译 表示是HTML标签
+        return isHTML? md.render(content) : content;
       }
     });
     const currentImageURL = computed(() => {
