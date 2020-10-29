@@ -15,13 +15,11 @@
       >
         <button class="btn btn-primary">上传成功</button>
       </slot>
-      
+
       <slot v-else name="default">
         <button class="btn btn-primary">点击上传</button>
       </slot>
     </div>
-    
-    
     <input
       type="file"
       class="file-input d-none"
@@ -32,13 +30,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType, ref, watch } from "vue";
 import axios from "axios";
-type UploaderStatus =
-  | "ready"
-  | "loading"
-  | "success"
-  | "error"
+type UploaderStatus = "ready" | "loading" | "success" | "error";
 type ChangeFunc = (file: File) => boolean;
 export default defineComponent({
   name: "uploader",
@@ -50,19 +44,31 @@ export default defineComponent({
     beforeUpload: {
       type: Function as PropType<ChangeFunc>,
     },
+    uploader: {
+      type: Object,
+    },
   },
   emits: ["file-uploaded", "file-uploader-error"],
   inheritAttrs: false,
   setup(props, context) {
-    const uploadedData = ref();
+    const uploadedData = ref(props.uploader);
     const fileInput = ref<null | HTMLInputElement>(null);
-    const fileStatus = ref<UploaderStatus>("ready");
+    const fileStatus = ref<UploaderStatus>(props.uploader ? "success" : "ready");
+    watch(
+      () => props.uploader,
+      (newValue) => {
+        if(newValue){
+          fileStatus.value = "success";
+          uploadedData.value = newValue;
+        }
+      }
+    );
     const triggerUploader = () => {
       if (fileInput.value) {
         fileInput.value.click();
       }
     };
-   
+
     const onUploader = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files) {

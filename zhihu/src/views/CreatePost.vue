@@ -6,6 +6,7 @@
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
       @file-uploaded="handFileUpload"
+      :uploader="currentUploadValue"
     >
       <h2>点击上传图片</h2>
       <template #loading>
@@ -46,11 +47,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import ValidateForm from "../components/ValidateForm.vue";
 import ValidateInput, { RulesProp } from "../components/ValidateInput.vue";
 import { beforUploadCheck } from "../hooks/Hleper";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import createMessage from "../hooks/createMessage";
 import ValidatePassowrd, {
   RulesPropType,
@@ -77,6 +78,8 @@ export default defineComponent({
     const contentVal = ref("");
     const store = useStore<GlobalDataProps>();
     const router = useRouter();
+    const route = useRoute();
+    const isEdiMonted = !!route.query.id; //将数值类型进行转译成布尔类型
     const titleRules: RulesProp = [
       {
         type: "required",
@@ -87,7 +90,7 @@ export default defineComponent({
       {
         type: "text",
         message: "文章详情不能为空",
-      },
+      }, 
     ];
     let imageId = "";
     const handFileUpload = (rawData: RespontenProps<AvatarType>) => {
@@ -95,6 +98,24 @@ export default defineComponent({
         imageId = rawData.data._id;
       }
     };
+    const currentUploadValue = ref();
+    onMounted(() => {
+      if (isEdiMonted) {
+        store
+          .dispatch("fetchPost", route.query.id)
+          .then((rawData: RespontenProps<PostProps>) => {
+            if (rawData.data.image) {
+              currentUploadValue.value = { data: rawData.data.image };
+            }
+            if(typeof rawData.data.title !== "undefined"){
+              titleVal.value = rawData.data.title;
+            }
+            if (typeof rawData.data.content !== "undefined") {
+              contentVal.value = rawData.data.content;
+            }
+          });
+      }
+    });
     const onFormSubmit = (val: boolean) => {
       if (val) {
         const { column, _id } = store.state.user;
@@ -146,6 +167,8 @@ export default defineComponent({
       contentRules,
       uploadCheck,
       handFileUpload,
+      isEdiMonted,
+      currentUploadValue,
     };
   },
 });
