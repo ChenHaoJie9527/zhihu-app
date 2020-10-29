@@ -3,7 +3,7 @@
     <div class="loading-container" :style="{ backgroundColor: background }">
       <div class="loading-content">
         <div class="spinner-border text-primary" role="status"></div>
-        <p class="sr-only text-primary small">{{ text || "loading" }}...</p>
+        <p class="visually-hidden text-primary small">{{ text || "loading" }}...</p>
       </div>
     </div>
   </teleport>

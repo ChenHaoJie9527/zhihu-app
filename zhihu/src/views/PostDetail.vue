@@ -1,6 +1,9 @@
 <template>
   <div class="post-detail-page">
-    <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost && typeof currentPost.image !== 'string'">
+    <article
+      class="w-75 mx-auto mb-5 pb-3"
+      v-if="currentPost && typeof currentPost.image !== 'string'"
+    >
       <img
         :src="currentPost.image.url"
         :alt="currentPost.title"
@@ -19,21 +22,26 @@
           ></UserProfile>
         </div>
         <span class="text-muted col text-right font-italic"
-          >发表于：{{ currentPost.createAt }}</span
+          >发表于：{{ updataAtTime }}</span
         >
       </div>
       <div v-html="currentHTML"></div>
+      <div class="btn-group mt-5" v-if="showEdition">
+        <button type="button" class="btn btn-success mr-2">编辑文章</button>
+        <button type="button" class="btn btn-dark">删除文章</button>
+      </div>
     </article>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { GlobalDataProps, PostProps, AvatarType } from "../store";
+import { GlobalDataProps, PostProps, AvatarType, UserProps } from "../store";
 import MarkdownIt from "markdown-it";
 import UserProfile from "../components/UserProfile.vue";
+import moment from "moment";
 export default defineComponent({
   name: "postDetail",
   components: {
@@ -50,11 +58,21 @@ export default defineComponent({
     const currentPost = computed<PostProps>(() => {
       return store.getters.getCurrentPost(currentId);
     });
+    const updataAtTime = moment(currentPost.value.updatedAt).format("YYYY-MM-DD HH:mm:ss");
     const currentHTML = computed(() => {
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
         //如果是false 说明不需要转译 表示是HTML标签
-        return isHTML? md.render(content) : content;
+        return isHTML ? md.render(content) : content;
+      }
+    });
+    const showEdition = computed(() => {
+      const { _id, isLogin } = store.state.user;
+      if (currentPost.value && currentPost.value.author && isLogin) {
+        const postAuthor = currentPost.value.author as UserProps;
+        return postAuthor._id == _id;
+      } else {
+        return false;
       }
     });
     const currentImageURL = computed(() => {
@@ -69,6 +87,8 @@ export default defineComponent({
       currentPost,
       currentHTML,
       currentImageURL,
+      showEdition,
+      updataAtTime
     };
   },
 });

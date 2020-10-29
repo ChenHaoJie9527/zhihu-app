@@ -23,9 +23,9 @@ export interface PostProps {
     content?: string;
     excerpt?: string;
     image?: AvatarType | string;
-    createAt?: string;
+    updatedAt?: string;
     column?: string;
-    author?: string | number;
+    author?: string | number | UserProps;
     isHTML?: boolean;
 }
 
