@@ -1,6 +1,6 @@
 <template>
   <div class="create-post-page">
-    <h3>新建文章</h3>
+    <h3>{{isEdiMonted? '编辑文章' : '新建文章'}}</h3>
     <Uploader
       action="/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -19,9 +19,9 @@
         <img id="uploadedImg" :src="dataProps.uploadedData.data.url" alt="" />
       </template>
     </Uploader>
-    
+
     <ValidateForm @form-submit="onFormSubmit">
-    <h2>{{titleVal}}</h2>
+      <h2>{{ titleVal }}</h2>
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
         <ValidateInput
@@ -42,7 +42,7 @@
         ></ValidatePassowrd>
       </div>
       <template #submit>
-        <button class="btn btn-primary btn-large">创建文章</button>
+        <button class="btn btn-primary btn-large">{{isEdiMonted ? '更新文章' : '发表文章'}}</button>
       </template>
     </ValidateForm>
   </div>
@@ -92,7 +92,7 @@ export default defineComponent({
       {
         type: "text",
         message: "文章详情不能为空",
-      }, 
+      },
     ];
     let imageId = "";
     const handFileUpload = (rawData: RespontenProps<AvatarType>) => {
@@ -109,7 +109,7 @@ export default defineComponent({
             if (rawData.data.image) {
               currentUploadValue.value = { data: rawData.data.image };
             }
-            if(typeof rawData.data.title !== "undefined"){
+            if (typeof rawData.data.title !== "undefined") {
               titleVal.value = rawData.data.title;
             }
             if (typeof rawData.data.content !== "undefined") {
@@ -131,7 +131,14 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId;
           }
-          store.dispatch("createPost", newPost).then(() => {
+          const actionName = isEdiMonted ? "updatePost" : "createPost";
+          const senData = isEdiMonted
+            ? {
+                id: route.query.id,
+                payload: newPost,
+              }
+            : newPost;
+          store.dispatch(actionName, senData).then(() => {
             createMessage("发表成功，2秒后跳转到文章详情", "success");
             setTimeout(() => {
               router.push({

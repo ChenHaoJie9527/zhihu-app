@@ -1,5 +1,5 @@
-import { createStore, Commit } from "vuex";
-import axios from "axios";
+import { createStore, Commit, } from "vuex";
+import axios, { AxiosRequestConfig } from "axios";
 export interface RespontenProps<P = {}> {
     code: number;
     msg: string;
@@ -65,6 +65,12 @@ const getAndCommit = async (commit: Commit, url: string, mutationsName: string) 
 
 const postAndCommit = async (commit: Commit, url: string, mutationsName: string, payload: object) => {
     const { data } = await axios.post(url, payload);
+    commit(mutationsName, data);
+    return data;
+}
+
+const asyncAndCommitUpadate = async (commit: Commit, url: string, mutationsName: string, config: AxiosRequestConfig = { method: "GET" }) => {
+    const { data } = await axios(url, config);
     commit(mutationsName, data);
     return data;
 }
@@ -141,6 +147,15 @@ export const store = createStore<GlobalDataProps>({
             state.token = "";
             localStorage.removeItem("token");
             delete axios.defaults.headers.common.Authorization;
+        },
+        updatePost(state, { data }) {
+            state.posts = state.posts.map(item => {
+                if(item._id == data._id){
+                    return data;
+                }else {
+                    return item;
+                }
+            })
         }
     },
     actions: {
@@ -164,6 +179,12 @@ export const store = createStore<GlobalDataProps>({
         },
         async createPost({ commit }, payload) {
             return postAndCommit(commit, `/posts`, "createPost", payload);
+        },
+        async updatePost({ commit }, { id, payload }) {
+            return asyncAndCommitUpadate(commit, `/posts/${id}`, "updatePost", {
+                method: "PATCH",
+                data: payload
+            });
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {
