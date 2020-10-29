@@ -1,11 +1,11 @@
-import { reactive, SetupContext } from "vue";
+import { reactive, SetupContext, computed, WritableComputedRef } from "vue";
 interface EmailProps {
-    val: string;
+    val: string | WritableComputedRef<string>;
     message: string;
     error: boolean;
 }
 interface RuleProp {
-    type: "required" | "email" ;
+    type: "required" | "email";
     message: string;
 }
 type RulesProp = RuleProp[];
@@ -20,15 +20,16 @@ type contextType = SetupContext<Record<string, any>>;
 const useValidate = (props: propsType, context: contextType) => {
     const email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const inputRef = reactive<EmailProps>({
-        val: props.modelValue || "",
+        val: computed({
+            get: () => props.modelValue || "",
+            set: newValue => {
+                context.emit("update:modelValue", newValue)
+            }
+        }),
         message: "",
         error: false,
     });
-    const updateValue = (e: KeyboardEvent) => {
-        const targetValue = (e.target as HTMLInputElement).value;
-        inputRef.val = targetValue;
-        context.emit("update:modelValue", targetValue);
-    };
+    
     const validateInput = () => {
         if (props.rules) {
             const allPassed = props.rules.every((item) => {
@@ -53,7 +54,6 @@ const useValidate = (props: propsType, context: contextType) => {
     };
     return {
         inputRef,
-        updateValue,
         validateInput
     }
 };

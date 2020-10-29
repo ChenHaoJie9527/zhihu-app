@@ -5,7 +5,7 @@
       v-if="currentPost && typeof currentPost.image !== 'string'"
     >
       <img
-        :src="currentPost.image.url"
+        :src="currentPost.image && currentPost.image.url"
         :alt="currentPost.title"
         class="rounded-lg img-fluid my-4"
       />

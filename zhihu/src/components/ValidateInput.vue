@@ -3,10 +3,9 @@
     <input
       class="form-control"
       @blur="validateInput"
-      :value="inputRef.val"
       :class="{ 'is-invalid': inputRef.error }"
-      @input="updateValue"
       v-bind="$attrs"
+      v-model="inputRef.val"
     />
     <span v-if="inputRef.error" class="invalid-feedback">
       {{ inputRef.message }}
@@ -15,7 +14,7 @@
 </template> 
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, watch } from "vue";
+import { defineComponent, onMounted, PropType } from "vue";
 import { emitter } from "./ValidateForm.vue";
 import useValidate from "../hooks/useValidate";
 interface RuleProp {
@@ -32,7 +31,7 @@ export default defineComponent({
   inheritAttrs: false, // inheritAttrs 禁用子组件根节点继承子组件非prop属性
   setup(props, context) {
     // console.log(context.attrs); // 可以获取到父组件传递过来的非prop属性 可通过v-bing="$attrs"设置属性
-    const { inputRef, validateInput, updateValue } = useValidate(
+    const { inputRef, validateInput } = useValidate(
       props,
       context
     );
@@ -42,7 +41,6 @@ export default defineComponent({
     return {
       inputRef,
       validateInput,
-      updateValue,
     };
   },
 });

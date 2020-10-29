@@ -5,8 +5,7 @@
       class="form-control"
       @blur="validatePassword"
       :class="{ 'is-invalid': passwordRef.error }"
-      :value="passwordRef.val"
-      @input="passwordUpdate"
+      v-model="passwordRef.val"
       v-bind="$attrs"
     />
     <textarea
@@ -14,8 +13,7 @@
       class="form-control"
       @blur="validatePassword"
       :class="{ 'is-invalid': passwordRef.error }"
-      :value="passwordRef.val"
-      @input="passwordUpdate"
+      v-model="passwordRef.val"
       v-bind="$attrs"
       rows="30"
     ></textarea>
@@ -26,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, watch } from "vue";
+import { defineComponent, onMounted, PropType, } from "vue";
 import useValidatePassword from "../hooks/useValidatePassword";
 import { emitter } from "./ValidateForm.vue";
 interface RuleProp {
@@ -49,22 +47,15 @@ export default defineComponent({
   },
   inheritAttrs: false, // inheritAttrs 禁用子组件根节点继承子组件非prop属性
   setup(props, context) {
-    console.log(props.rules)
     const {
       passwordRef,
-      passwordUpdate,
       validatePassword,
     } = useValidatePassword(props, context);
     onMounted(() => {
       emitter.emit("form-item-create", validatePassword);
     });
-    watch(props,()=>{
-      console.log("tag",props.tag)
-
-    })
     return {
       passwordRef,
-      passwordUpdate,
       validatePassword,
     };
   },
