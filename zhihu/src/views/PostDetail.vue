@@ -27,7 +27,7 @@
       </div>
       <div v-html="currentHTML"></div>
       <div class="btn-group mt-5" v-if="showEdition">
-        <button type="button" class="btn btn-success mr-2">编辑文章</button>
+        <router-link type="button" class="btn btn-success mr-2" :to="{name: 'create', query: {id: currentPost._id}}">编辑文章</router-link>
         <button type="button" class="btn btn-dark">删除文章</button>
       </div>
     </article>
