@@ -1,5 +1,13 @@
 <template>
   <div class="post-detail-page">
+    <Molad
+      title="删除文章"
+      :visible="modalVisible"
+      @modal-on-close="modalVisible = false"
+      @modal-on-confirm="modalVisible = false"
+    >
+      <p>确定要删除文章吗?</p>
+    </Molad>
     <article
       class="w-75 mx-auto mb-5 pb-3"
       v-if="currentPost && typeof currentPost.image !== 'string'"
@@ -27,7 +35,12 @@
       </div>
       <div v-html="currentHTML"></div>
       <div class="btn-group mt-5" v-if="showEdition">
-        <router-link type="button" class="btn btn-success mr-2" :to="{name: 'create', query: {id: currentPost._id}}">编辑文章</router-link>
+        <router-link
+          type="button"
+          class="btn btn-success mr-2"
+          :to="{ name: 'create', query: { id: currentPost._id } }"
+          >编辑文章</router-link
+        >
         <button type="button" class="btn btn-dark">删除文章</button>
       </div>
     </article>
@@ -35,30 +48,35 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, watch } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { GlobalDataProps, PostProps, AvatarType, UserProps } from "../store";
 import MarkdownIt from "markdown-it";
 import UserProfile from "../components/UserProfile.vue";
+import Molad from "../components/Molad.vue";
 import moment from "moment";
 export default defineComponent({
   name: "postDetail",
   components: {
     UserProfile,
+    Molad,
   },
   setup() {
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
     const currentId = route.params.id;
     const md = new MarkdownIt();
+    const modalVisible = ref(false);
     onMounted(() => {
       store.dispatch("fetchPost", currentId);
     });
     const currentPost = computed<PostProps>(() => {
       return store.getters.getCurrentPost(currentId);
     });
-    const updataAtTime = moment(currentPost.value.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+    const updataAtTime = moment(currentPost.value.updatedAt).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
     const currentHTML = computed(() => {
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
@@ -88,7 +106,8 @@ export default defineComponent({
       currentHTML,
       currentImageURL,
       showEdition,
-      updataAtTime
+      updataAtTime,
+      modalVisible,
     };
   },
 });
