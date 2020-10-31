@@ -41,7 +41,9 @@
           :to="{ name: 'create', query: { id: currentPost._id } }"
           >编辑文章</router-link
         >
-        <button type="button" class="btn btn-dark">删除文章</button>
+        <button type="button" class="btn btn-dark" @click.prevent="onShowModal">
+          删除文章
+        </button>
       </div>
     </article>
   </div>
@@ -101,6 +103,9 @@ export default defineComponent({
         return null;
       }
     });
+    const onShowModal = () => {
+      modalVisible.value = true;
+    };
     return {
       currentPost,
       currentHTML,
@@ -108,6 +113,7 @@ export default defineComponent({
       showEdition,
       updataAtTime,
       modalVisible,
+      onShowModal,
     };
   },
 });
