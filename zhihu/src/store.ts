@@ -90,7 +90,7 @@ export const store = createStore<GlobalDataProps>({
     },
     getters: {
         getColumns: state => (id: string) => {
-            return state.columns.find(item => item._id === id);
+            return state.columns.find(item => item._id == id);
         },
         getList: state => (id: string) => {
             return state.posts.filter(item => item.column === id);
@@ -150,11 +150,16 @@ export const store = createStore<GlobalDataProps>({
         },
         updatePost(state, { data }) {
             state.posts = state.posts.map(item => {
-                if(item._id == data._id){
+                if (item._id == data._id) {
                     return data;
-                }else {
+                } else {
                     return item;
                 }
+            })
+        },
+        deletePost(state, { data }) {
+            state.posts = state.posts.filter(item => {
+                return item._id !== data._id;
             })
         }
     },
@@ -169,13 +174,13 @@ export const store = createStore<GlobalDataProps>({
             return getAndCommit(commit, `/columns/${cid}/posts`, "fetchPosts");
         },
         async fetchPost({ commit }, id) {
-            return getAndCommit(commit, `/posts/${id}`, 'fetchPost');
+            return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
         },
         async login({ commit }, payload) {
             return postAndCommit(commit, `/user/login`, "login", payload);
         },
         async fetchCurrentUser({ commit }) {
-            return getAndCommit(commit, `/user/current`, "fetchCurrentUser");
+            return asyncAndCommitUpadate(commit, `/user/current`, "fetchCurrentUser");
         },
         async createPost({ commit }, payload) {
             return postAndCommit(commit, `/posts`, "createPost", payload);
@@ -185,6 +190,11 @@ export const store = createStore<GlobalDataProps>({
                 method: "PATCH",
                 data: payload
             });
+        },
+        async deletePost({ commit }, id) {
+            return asyncAndCommitUpadate(commit, `/posts/${id}`, "deletePost", {
+                method: "DELETE",
+            })
         },
         //组合actions 将多个异步方法组合起来使用
         loginAndFetchCurrentUser({ dispatch }, loginData) {

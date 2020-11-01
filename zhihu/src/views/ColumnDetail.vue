@@ -9,7 +9,7 @@
         />
       </div>
       <div class="col-9">
-        <h4>{{ column.title}}</h4>
+        <h4>{{ column.title }}</h4>
         <p class="text-muted">{{ column.description }}</p>
       </div>
     </div>
@@ -38,9 +38,7 @@ export default defineComponent({
       store.dispatch("fetchPosts", currenID);
     });
     const column = computed(() => {
-      const selectColumn = store.getters.getColumns(currenID) as
-        | ColumnProps
-        | undefined;
+      const selectColumn = store.getters.getColumns(currenID) as| ColumnProps;
       if (selectColumn) {
         addColumnAvatar(selectColumn, 100, 100);
       }

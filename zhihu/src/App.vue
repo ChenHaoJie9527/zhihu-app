@@ -26,7 +26,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { computed, defineComponent, onMounted, watch } from "vue";
 import GlobalHearder from "./components/GlobalHearder.vue";
 import { useStore } from "vuex";
-import { GlobalDataProps } from "./store";
+import { GlobalDataProps, UserProps } from "./store";
 import Loading from "./components/Loading.vue";
 import axios from "axios";
 import CreateMessage from "./hooks/createMessage";
@@ -54,7 +54,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>();
-    const currentUser = computed(() => store.state.user);
+    const currentUser = computed<UserProps>(() => store.state.user);
     const isLoading = computed(() => store.getters.getLoading());
     const token = computed(() => store.state.token);
     onMounted(() => {
