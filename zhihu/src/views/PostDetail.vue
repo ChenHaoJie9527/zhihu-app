@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, watch } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { GlobalDataProps, PostProps, AvatarType, UserProps } from "../store";
