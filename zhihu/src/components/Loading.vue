@@ -3,7 +3,7 @@
     <div class="loading-container" :style="{ backgroundColor: background }">
       <div class="loading-content">
         <div class="spinner-border text-primary" role="status"></div>
-        <p class="visually-hidden text-primary small">{{ text || "loading" }}...</p>
+        <p class=" text-primary small">{{ text || "loading" }}...</p>
       </div>
     </div>
   </teleport>
@@ -24,7 +24,8 @@ export default defineComponent({
       defualt: "",
     },
   },
-  setup() {
+  setup(props) {
+    console.log(props.text)
     const loadingNode = document.createElement("div");
     loadingNode.id = "loading";
     document.body.appendChild(loadingNode);

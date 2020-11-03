@@ -1,5 +1,13 @@
 <template>
   <div class="post-detail-page">
+    <Molad
+      title="删除文章"
+      :visible="modalVisible"
+      @modal-on-close="modalVisible = false"
+      @modal-on-confirm="hidenAndDelete"
+    >
+      <p>确定要删除文章吗?</p>
+    </Molad>
     <article
       class="w-75 mx-auto mb-5 pb-3"
       v-if="currentPost && typeof currentPost.image !== 'string'"
@@ -27,38 +35,59 @@
       </div>
       <div v-html="currentHTML"></div>
       <div class="btn-group mt-5" v-if="showEdition">
-        <router-link type="button" class="btn btn-success mr-2" :to="{name: 'create', query: {id: currentPost._id}}">编辑文章</router-link>
-        <button type="button" class="btn btn-dark">删除文章</button>
+        <router-link
+          type="button"
+          class="btn btn-success mr-2"
+          :to="{ name: 'create', query: { id: currentPost._id } }"
+          >编辑文章</router-link
+        >
+        <button type="button" class="btn btn-dark" @click.prevent="onShowModal">
+          删除文章
+        </button>
       </div>
     </article>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { GlobalDataProps, PostProps, AvatarType, UserProps } from "../store";
+import {
+  GlobalDataProps,
+  PostProps,
+  AvatarType,
+  UserProps,
+  RespontenProps,
+} from "../store";
 import MarkdownIt from "markdown-it";
 import UserProfile from "../components/UserProfile.vue";
+import Molad from "../components/Molad.vue";
 import moment from "moment";
+import CreateMessage from "../hooks/createMessage";
+import {useRouter} from "vue-router";
 export default defineComponent({
   name: "postDetail",
   components: {
     UserProfile,
+    Molad,
   },
   setup() {
     const route = useRoute();
     const store = useStore<GlobalDataProps>();
     const currentId = route.params.id;
     const md = new MarkdownIt();
+    const router = useRouter();
+    const modalVisible = ref(false);
     onMounted(() => {
       store.dispatch("fetchPost", currentId);
     });
     const currentPost = computed<PostProps>(() => {
       return store.getters.getCurrentPost(currentId);
     });
-    const updataAtTime = moment(currentPost.value.updatedAt).format("YYYY-MM-DD HH:mm:ss");
+    const updataAtTime = moment(currentPost.value.updatedAt).format(
+      "YYYY-MM-DD HH:mm:ss"
+    );
     const currentHTML = computed(() => {
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
@@ -83,12 +112,35 @@ export default defineComponent({
         return null;
       }
     });
+    const onShowModal = () => {
+      modalVisible.value = true;
+    };
+    const hidenAndDelete = () => {
+      modalVisible.value = false;
+      store
+        .dispatch("deletePost", currentId)
+        .then((rawData: RespontenProps<PostProps>) => {
+          console.log(rawData.data)
+          CreateMessage("删除成功，2秒后跳转到专栏首页","success")
+          setTimeout(()=>{
+            router.push({
+              name: "column",
+              params: {
+                id: (rawData.data.column) as string | number
+              }
+            })
+          },2000)
+        });
+    };
     return {
       currentPost,
       currentHTML,
       currentImageURL,
       showEdition,
-      updataAtTime
+      updataAtTime,
+      modalVisible,
+      onShowModal,
+      hidenAndDelete
     };
   },
 });

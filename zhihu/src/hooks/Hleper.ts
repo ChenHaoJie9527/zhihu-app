@@ -4,6 +4,7 @@ interface CondiTionProps {
 }
 type ErrorType = "size" | "format" | null;
 
+import { strict } from 'assert';
 import { ColumnProps, AvatarType, UserProps } from "../store";
 export function generateFitUrl(data: AvatarType, width: number | string, height: number | string, format = ["m_pad"]) {
     if (data && data.url) {
@@ -43,3 +44,42 @@ export function beforUploadCheck(file: File, condition: CondiTionProps) {
         error
     }
 }
+
+// 辅助函数： 1. 数组转对象 2. 对象转数组
+
+interface TextProps {
+    _id: string;
+    name: string;
+}
+const testData: TextProps[] = [{ _id: "1", name: "a" }, { _id: "2", name: "b" }];
+interface R<T> {
+    [key: string]: T;
+}
+// 数组转对象
+export const arrToObj = <T extends { _id?: string }>(arr: Array<T>) => {
+    return arr.reduce((prev, current) => {
+        if (current._id) {
+            prev[current._id] = current;
+        }
+        return prev;
+    }, {} as R<T>)
+}
+const result = arrToObj(testData);
+console.log(result);
+
+const testData2: R<TextProps> = {
+    1: {
+        _id: "a",
+        name: "a"
+    },
+    2: {
+        _id: "b",
+        name: "b"
+    }
+};
+export const objToarr = <TextProps>(obj: R<TextProps>) => {
+    return Object.keys(obj).map(key => obj[key]);
+}
+const reslut2 = objToarr(testData2);
+console.log(reslut2);
+

@@ -34,7 +34,6 @@ interface RuleProp {
 }
 export type tagType = "input" | "textarea";
 export type RulesPropType = RuleProp[];
-export type TagType = "input" | "textarea";
 export default defineComponent({
   name: "ValidatePassword",
   props: {
