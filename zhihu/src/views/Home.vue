@@ -40,7 +40,8 @@ export default defineComponent({
       store.dispatch("fetchColumns");
     });
     const list = computed(() => {
-      return store.state.columns;
+      // return store.state.columns;
+      return store.getters.getColumns;
     });
     return {
       list,

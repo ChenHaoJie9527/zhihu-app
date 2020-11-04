@@ -3,7 +3,7 @@
     <div class="column-info row bm-4 pb-4 align-items-center" v-if="column">
       <div class="col-3 text-center">
         <img
-          :src="column.avatar && column.avatar.tacitlyUrl"
+          :src="column.avatar && (column.avatar.url || column.avatar.tacitlyUrl)"
           :alt="column.title"
           class="rounded-circle border w-100"
         />
@@ -38,7 +38,7 @@ export default defineComponent({
       store.dispatch("fetchPosts", currenID);
     });
     const column = computed(() => {
-      const selectColumn = store.getters.getColumns(currenID) as| ColumnProps;
+      const selectColumn = store.getters.getColumnsById(currenID) as| ColumnProps;
       if (selectColumn) {
         addColumnAvatar(selectColumn, 100, 100);
       }

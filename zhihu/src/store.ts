@@ -1,5 +1,6 @@
 import { createStore, Commit, } from "vuex";
 import axios, { AxiosRequestConfig } from "axios";
+import { objToarr, arrToObj } from "./hooks/Hleper";
 export interface RespontenProps<P = {}> {
     code: number;
     msg: string;
@@ -38,13 +39,14 @@ export interface UserProps {
     description?: string;
     avatar?: AvatarType;
 }
-export interface GetPops {
-    getColumns(): void;
-    getList(): void;
+
+interface ListProps<T> {
+    [key: string]: T;
 }
+
 export interface GlobalDataProps {
-    columns: ColumnProps[];
-    posts: PostProps[];
+    columns: ListProps<ColumnProps>;
+    posts: ListProps<PostProps>;
     user: UserProps;
     loading: boolean;
     token: string;
@@ -77,8 +79,9 @@ const asyncAndCommitUpadate = async (commit: Commit, url: string, mutationsName:
 
 export const store = createStore<GlobalDataProps>({
     state: {
-        columns: [],
-        posts: [{ isHTML: false }],
+        // columns: [],
+        columns: {},
+        posts: {},
         user: {
             isLogin: false,
         },
@@ -89,11 +92,16 @@ export const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
-        getColumns: state => (id: string) => {
-            return state.columns.find(item => item._id == id);
+        getColumns: state => {
+            // return state.columns.find(item => item._id == id);
+            return objToarr(state.columns);
+        },
+        getColumnsById: state => (id: string) => {
+            return state.columns[id];
+            // return objToarr(state.columns);
         },
         getList: state => (id: string) => {
-            return state.posts.filter(item => item.column === id);
+            return objToarr(state.posts).filter(item => item.column === id);
         },
         getUserIsLogin: state => () => {
             return state.user.isLogin;
@@ -102,7 +110,8 @@ export const store = createStore<GlobalDataProps>({
             return state.loading;
         },
         getCurrentPost: state => (id: string) => {
-            const arr = state.posts.find(item => item._id == id);
+            // const arr = state.posts.find(item => item._id == id);
+            const arr = state.posts[id];
             return {
                 isHTML: false,
                 ...arr
@@ -111,19 +120,21 @@ export const store = createStore<GlobalDataProps>({
     },
     mutations: {
         createPost(state, data) {
-            state.posts.push(data)
+            state.posts[data._id] = data;
         },
+        // 获取首页列表
         fetchColumns(state, ColumnsData) {
-            state.columns = ColumnsData.data.list;
+            state.columns = arrToObj(ColumnsData.data.list);
         },
+        // 获取个人专栏列表
         fetchColumn(state, ColumnData) {
-            state.columns = [ColumnData.data];
+            state.columns[ColumnData.data._id] = ColumnData.data;
         },
         fetchPosts(state, PostsData) {
-            state.posts = PostsData.data.list;
+            state.posts = arrToObj(PostsData.data.list);
         },
         fetchPost(state, rawdata) {
-            state.posts = [rawdata.data];
+            state.posts[rawdata.data._id] = rawdata.data;
         },
         setLoading(state, status) {
             state.loading = status;
@@ -149,18 +160,20 @@ export const store = createStore<GlobalDataProps>({
             delete axios.defaults.headers.common.Authorization;
         },
         updatePost(state, { data }) {
-            state.posts = state.posts.map(item => {
-                if (item._id == data._id) {
-                    return data;
-                } else {
-                    return item;
-                }
-            })
+            // state.posts = state.posts.map(item => {
+            //     if (item._id == data._id) {
+            //         return data;
+            //     } else {
+            //         return item;
+            //     }
+            // })
+            state.posts[data._id] = data;
         },
         deletePost(state, { data }) {
-            state.posts = state.posts.filter(item => {
-                return item._id !== data._id;
-            })
+            // state.posts = state.posts.filter(item => {
+            //     return item._id !== data._id;
+            // })
+            delete state.posts[data._id];
         }
     },
     actions: {
