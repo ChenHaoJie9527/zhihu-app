@@ -45,8 +45,8 @@ interface ListProps<T> {
 }
 
 export interface GlobalDataProps {
-    columns: ListProps<ColumnProps>;
-    posts: ListProps<PostProps>;
+    columns: { data: ListProps<ColumnProps>; isLoaded: boolean };
+    posts: { data: ListProps<PostProps>; loadedColumns: Array<string> };
     user: UserProps;
     loading: boolean;
     token: string;
@@ -71,17 +71,28 @@ const postAndCommit = async (commit: Commit, url: string, mutationsName: string,
     return data;
 }
 
-const asyncAndCommitUpadate = async (commit: Commit, url: string, mutationsName: string, config: AxiosRequestConfig = { method: "GET" }) => {
+const asyncAndCommitUpadate = async (commit: Commit, url: string, mutationsName: string, config: AxiosRequestConfig = { method: "GET" }, exreatData?: any) => {
     const { data } = await axios(url, config);
-    commit(mutationsName, data);
+    if (exreatData) {
+        commit(mutationsName, { data, exreatData })
+    } else {
+        commit(mutationsName, data);
+
+    }
     return data;
 }
 
 export const store = createStore<GlobalDataProps>({
     state: {
         // columns: [],
-        columns: {},
-        posts: {},
+        columns: {
+            data: {},
+            isLoaded: false
+        },
+        posts: {
+            data: {},
+            loadedColumns: []
+        },
         user: {
             isLogin: false,
         },
@@ -94,14 +105,14 @@ export const store = createStore<GlobalDataProps>({
     getters: {
         getColumns: state => {
             // return state.columns.find(item => item._id == id);
-            return objToarr(state.columns);
+            return objToarr(state.columns.data);
         },
         getColumnsById: state => (id: string) => {
-            return state.columns[id];
+            return state.columns.data[id];
             // return objToarr(state.columns);
         },
         getList: state => (id: string) => {
-            return objToarr(state.posts).filter(item => item.column === id);
+            return objToarr(state.posts.data).filter(item => item.column === id);
         },
         getUserIsLogin: state => () => {
             return state.user.isLogin;
@@ -111,7 +122,7 @@ export const store = createStore<GlobalDataProps>({
         },
         getCurrentPost: state => (id: string) => {
             // const arr = state.posts.find(item => item._id == id);
-            const arr = state.posts[id];
+            const arr = state.posts.data[id];
             return {
                 isHTML: false,
                 ...arr
@@ -120,21 +131,25 @@ export const store = createStore<GlobalDataProps>({
     },
     mutations: {
         createPost(state, data) {
-            state.posts[data._id] = data;
+            state.posts.data[data._id] = data;
         },
         // 获取首页列表
         fetchColumns(state, ColumnsData) {
-            state.columns = arrToObj(ColumnsData.data.list);
+            state.columns.data = arrToObj(ColumnsData.data.list);
+            state.columns.isLoaded = true;
         },
         // 获取个人专栏列表
         fetchColumn(state, ColumnData) {
-            state.columns[ColumnData.data._id] = ColumnData.data;
+            state.columns.data[ColumnData.data._id] = ColumnData.data;
         },
-        fetchPosts(state, PostsData) {
-            state.posts = arrToObj(PostsData.data.list);
+        fetchPosts(state, { data: PostsData, exreatData: cid }) {
+            state.posts.data = { ...PostsData, ...arrToObj(PostsData.data.list) };
+            // state.posts.data = arrToObj(PostsData.data.list); //error 
+            // console.log(state.posts.data);
+            state.posts.loadedColumns.push(cid);
         },
         fetchPost(state, rawdata) {
-            state.posts[rawdata.data._id] = rawdata.data;
+            state.posts.data[rawdata.data._id] = rawdata.data;
         },
         setLoading(state, status) {
             state.loading = status;
@@ -167,27 +182,41 @@ export const store = createStore<GlobalDataProps>({
             //         return item;
             //     }
             // })
-            state.posts[data._id] = data;
+            state.posts.data[data._id] = data;
         },
         deletePost(state, { data }) {
             // state.posts = state.posts.filter(item => {
             //     return item._id !== data._id;
             // })
-            delete state.posts[data._id];
+            delete state.posts.data[data._id];
         }
     },
     actions: {
-        async fetchColumns({ commit }) {
-            return getAndCommit(commit, "/columns", "fetchColumns");
+        async fetchColumns({ commit, state }) {
+            if (!state.columns.isLoaded) {
+                return getAndCommit(commit, "/columns", "fetchColumns");
+            }
         },
-        async fetchColumn({ commit }, cid) {
-            return getAndCommit(commit, `/columns/${cid}`, "fetchColumn");
+        async fetchColumn({ commit, state }, cid) {
+            if (!state.columns.data[cid]) {
+                return getAndCommit(commit, `/columns/${cid}`, "fetchColumn");
+            }
+
         },
-        async fetchPosts({ commit }, cid) {
-            return getAndCommit(commit, `/columns/${cid}/posts`, "fetchPosts");
+        async fetchPosts({ commit, state }, cid) {
+            if (!state.posts.loadedColumns.includes(cid)) {
+                return asyncAndCommitUpadate(commit, `/columns/${cid}/posts`, "fetchPosts", { method: "GET" }, cid);
+            } else {
+                return asyncAndCommitUpadate(commit, `/columns/${cid}/posts`, "fetchPosts", { method: "GET" }, cid);
+            }
+
         },
-        async fetchPost({ commit }, id) {
-            return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
+        async fetchPost({ commit, state }, id) {
+            if (!state.posts.data[id]) {
+                return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
+            }else {
+                return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
+            }
         },
         async login({ commit }, payload) {
             return postAndCommit(commit, `/user/login`, "login", payload);
