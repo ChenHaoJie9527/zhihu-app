@@ -45,7 +45,7 @@ interface ListProps<T> {
 }
 
 export interface GlobalDataProps {
-    columns: { data: ListProps<ColumnProps>; isLoaded: boolean };
+    columns: { data: ListProps<ColumnProps>; currentPage: number; total: number };
     posts: { data: ListProps<PostProps>; loadedColumns: Array<string> };
     user: UserProps;
     loading: boolean;
@@ -86,7 +86,8 @@ export const store = createStore<GlobalDataProps>({
         // columns: [],
         columns: {
             data: {},
-            isLoaded: false
+            currentPage: 0,
+            total: 0
         },
         posts: {
             data: {},
@@ -134,8 +135,15 @@ export const store = createStore<GlobalDataProps>({
         },
         // 获取首页列表
         fetchColumns(state, ColumnsData) {
-            state.columns.data = arrToObj(ColumnsData.data.list);
-            state.columns.isLoaded = true;
+            const { data } = state.columns;
+            const { list, count, currentPage } = ColumnsData.data;
+            state.columns = {
+                data: { ...data, ...arrToObj(list) },
+                total: count,
+                currentPage: (+currentPage)
+            }
+            // state.columns.data = arrToObj(ColumnsData.data.list);
+            // state.columns.isLoaded = true;
         },
         // 获取个人专栏列表
         fetchColumn(state, ColumnData) {
@@ -191,9 +199,13 @@ export const store = createStore<GlobalDataProps>({
         }
     },
     actions: {
-        async fetchColumns({ commit, state }) {
-            if (!state.columns.isLoaded) {
-                return getAndCommit(commit, "/columns", "fetchColumns");
+        async fetchColumns({ commit, state }, params = {}) {
+            const { currentPage = 1, pageSize = 6 } = params;
+            // if (!state.columns.isLoaded) {
+            //     return getAndCommit(commit, "/columns", "fetchColumns");
+            // }
+            if(state.columns.currentPage < currentPage){
+                return getAndCommit(commit, `/columns?currentPage=${currentPage}&pageSize=${pageSize}`, "fetchColumns");
             }
         },
         async fetchColumn({ commit, state }, cid) {
