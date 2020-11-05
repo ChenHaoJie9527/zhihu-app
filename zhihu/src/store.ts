@@ -77,7 +77,6 @@ const asyncAndCommitUpadate = async (commit: Commit, url: string, mutationsName:
         commit(mutationsName, { data, exreatData })
     } else {
         commit(mutationsName, data);
-
     }
     return data;
 }
@@ -143,7 +142,7 @@ export const store = createStore<GlobalDataProps>({
             state.columns.data[ColumnData.data._id] = ColumnData.data;
         },
         fetchPosts(state, { data: PostsData, exreatData: cid }) {
-            state.posts.data = { ...PostsData, ...arrToObj(PostsData.data.list) };
+            state.posts.data = { ...state.posts.data, ...arrToObj(PostsData.data.list) };
             // state.posts.data = arrToObj(PostsData.data.list); //error 
             // console.log(state.posts.data);
             state.posts.loadedColumns.push(cid);
@@ -206,15 +205,11 @@ export const store = createStore<GlobalDataProps>({
         async fetchPosts({ commit, state }, cid) {
             if (!state.posts.loadedColumns.includes(cid)) {
                 return asyncAndCommitUpadate(commit, `/columns/${cid}/posts`, "fetchPosts", { method: "GET" }, cid);
-            } else {
-                return asyncAndCommitUpadate(commit, `/columns/${cid}/posts`, "fetchPosts", { method: "GET" }, cid);
             }
 
         },
         async fetchPost({ commit, state }, id) {
             if (!state.posts.data[id]) {
-                return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
-            }else {
                 return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
             }
         },
