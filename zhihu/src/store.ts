@@ -209,8 +209,11 @@ export const store = createStore<GlobalDataProps>({
 
         },
         async fetchPost({ commit, state }, id) {
-            if (!state.posts.data[id]) {
+            const currentPost = state.posts.data[id];
+            if (!currentPost || !currentPost.content) {
                 return asyncAndCommitUpadate(commit, `/posts/${id}`, 'fetchPost');
+            } else {
+                return Promise.resolve({ data: currentPost });
             }
         },
         async login({ commit }, payload) {

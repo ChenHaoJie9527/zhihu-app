@@ -92,7 +92,7 @@ export default defineComponent({
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
         //如果是false 说明不需要转译 表示是HTML标签
-        return isHTML ? md.render(content) : content;
+        return isHTML ? content : md.render(content);
       }
     });
     const showEdition = computed(() => {
