@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GlobalHearder :user="currentUser"></GlobalHearder>
+    <GlobalHearder :user="currentUser">12312312321</GlobalHearder>
     <Loading
       v-if="isLoading"
       text="拼命加载中"
