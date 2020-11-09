@@ -3,7 +3,7 @@
     <div class="loading-container" :style="{ backgroundColor: background }">
       <div class="loading-content">
         <div class="spinner-border text-primary" role="status"></div>
-        <p class=" text-primary small">{{ text || "loading" }}...</p>
+        <p class="text-primary small">{{ text || "loading" }}...</p>
       </div>
     </div>
   </teleport>
@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from "vue";
-
+import { CreateLoading } from "../hooks/createLoading";
 export default defineComponent({
   name: "Loading",
   props: {
@@ -25,13 +25,13 @@ export default defineComponent({
     },
   },
   setup(props) {
-    console.log(props.text)
+    // CreateLoading(props.text as string, props.background as string);
     const loadingNode = document.createElement("div");
     loadingNode.id = "loading";
     document.body.appendChild(loadingNode);
-    onUnmounted(()=>{
-        document.body.removeChild(loadingNode);
-    })
+    onUnmounted(() => {
+      document.body.removeChild(loadingNode);
+    });
   },
 });
 </script>

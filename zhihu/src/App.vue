@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <GlobalHearder :user="currentUser"></GlobalHearder>
+    <GlobalHearder :user="currentUser" @log-out="onCloseOut"></GlobalHearder>
     <Loading
       v-if="isLoading"
       text="拼命加载中"
@@ -70,10 +70,15 @@ export default defineComponent({
         CreateMessage(message, "error");
       }
     });
+    const onCloseOut = (val: boolean) => {
+      store.state.user.isLogin = val;
+      store.commit("logout");
+    };
     return {
       currentUser,
       isLoading,
       error,
+      onCloseOut,
     };
   },
 });

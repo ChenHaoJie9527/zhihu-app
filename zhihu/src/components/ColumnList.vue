@@ -50,7 +50,6 @@ export default defineComponent({
         return item;
       });
     });
-    console.log(ColumList);
     const router = useRouter();
     const onClickToColumn = (id: string) => {
       router.push({

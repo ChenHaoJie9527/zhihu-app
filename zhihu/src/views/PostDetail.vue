@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import {
@@ -92,7 +92,7 @@ export default defineComponent({
       if (currentPost.value.content) {
         const { isHTML, content } = currentPost.value;
         //如果是false 说明不需要转译 表示是HTML标签
-        return isHTML ? md.render(content) : content;
+        return isHTML ? content : md.render(content);
       }
     });
     const showEdition = computed(() => {

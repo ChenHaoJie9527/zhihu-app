@@ -5,17 +5,17 @@
         <img src="../assets/callout.svg" alt="callout" class="w-50" />
         <h2 class="font-weight-light">随心写作，自由表达</h2>
         <p>
-          <a
-            href="#"
-            class="btn btn-primary my-2"
-            >开始写文章</a
-          >
+          <a href="#" class="btn btn-primary my-2">开始写文章</a>
         </p>
       </div>
     </section>
     <h4 class="font-weight-bold text-center">发现精彩</h4>
     <ColumnList :list="list"></ColumnList>
-    <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25">
+    <button
+      class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+      @click.prevent="loadMorePage"
+      v-if="!isLastPage"
+    >
       加载更多
     </button>
   </div>
@@ -25,9 +25,9 @@
 import { computed, defineComponent, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { GlobalDataProps, RespontenProps, AvatarType } from "../store";
-import CreateMessage from "../hooks/createMessage";
+import { GlobalDataProps } from "../store";
+// import CreateMessage from "../hooks/createMessage";
+import { useLoadMore } from "../hooks/useLoadMore";
 export default defineComponent({
   name: "home",
   components: {
@@ -37,13 +37,23 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     onMounted(() => {
-      store.dispatch("fetchColumns");
+      store.dispatch("fetchColumns", { pageSize: 3 });
     });
+    const currentPage = computed(() => store.state.columns.currentPage);
     const list = computed(() => {
-      return store.state.columns;
+      return store.getters.getColumns;
+    });
+    const total = computed(() => {
+      return store.state.columns.total;
+    });
+    const { loadMorePage, isLastPage } = useLoadMore("fetchColumns", total, {
+      currentPage: currentPage.value ? currentPage.value + 1 : 2,
+      pageSize: 3,
     });
     return {
       list,
+      loadMorePage,
+      isLastPage,
     };
   },
 });

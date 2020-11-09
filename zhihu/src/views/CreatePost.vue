@@ -8,7 +8,6 @@
       @file-uploaded="handFileUpload"
       :uploader="currentUploadValue"
     >
-      <h2>点击上传图片</h2>
       <template #loading>
         <div style="display: flex; flex-direction: column; align-items: center">
           <div class="spinner-border text-secondary" role="status"></div>
@@ -21,7 +20,6 @@
     </Uploader>
 
     <ValidateForm @form-submit="onFormSubmit">
-      <h2>{{ titleVal }}</h2>
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
         <ValidateInput
@@ -65,7 +63,6 @@ import {
   RespontenProps,
   AvatarType,
 } from "../store";
-import axios from "axios";
 import Uploader from "../components/Uploader.vue";
 export default defineComponent({
   name: "create",

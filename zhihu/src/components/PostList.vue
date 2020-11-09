@@ -17,7 +17,7 @@
             {{ item.excerpt }}
           </p>
         </div>
-        <span class="text-muted">{{ item.createAt }}</span>
+        <span class="text-muted">{{ item.updatedAt }}</span>
       </div>
     </article>
   </div>
