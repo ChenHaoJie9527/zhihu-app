@@ -127,7 +127,7 @@ export const store = createStore<GlobalDataProps>({
                 isHTML: false,
                 ...arr
             };
-        }
+        },
     },
     mutations: {
         createPost(state, data) {
@@ -196,7 +196,7 @@ export const store = createStore<GlobalDataProps>({
             //     return item._id !== data._id;
             // })
             delete state.posts.data[data._id];
-        }
+        },
     },
     actions: {
         async fetchColumns({ commit, state }, params = {}) {
@@ -204,7 +204,7 @@ export const store = createStore<GlobalDataProps>({
             // if (!state.columns.isLoaded) {
             //     return getAndCommit(commit, "/columns", "fetchColumns");
             // }
-            if(state.columns.currentPage < currentPage){
+            if (state.columns.currentPage < currentPage) {
                 return getAndCommit(commit, `/columns?currentPage=${currentPage}&pageSize=${pageSize}`, "fetchColumns");
             }
         },

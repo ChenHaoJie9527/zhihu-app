@@ -23,16 +23,20 @@
       <li class="list-inline-item">
         <DropDown :title="`您好${user.nickName ? user.nickName : 'vikkit'}`">
           <DropddownItem>
-            <router-link class="dropdown-item" :to="`/create`">新建文章</router-link>
+            <router-link class="dropdown-item" :to="`/create`"
+              >新建文章</router-link
+            >
           </DropddownItem>
           <DropddownItem disabled>
-            <router-link :to="`/column/${user.column}`" class="dropdown-item">我的专栏</router-link>
+            <router-link :to="`/column/${user.column}`" class="dropdown-item"
+              >我的专栏</router-link
+            >
           </DropddownItem>
           <DropddownItem disabled>
             <a href="#" class="dropdown-item">编辑资料</a>
           </DropddownItem>
           <DropddownItem>
-            <a href="#" class="dropdown-item">退出登录</a>
+            <a href="#" class="dropdown-item" @click.prevent="onLogOut">退出登录</a>
           </DropddownItem>
         </DropDown>
       </li>
@@ -58,8 +62,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    console.log(props.user.column)
+  emits: ["log-out"],
+  setup(props, context) {
+    console.log(props.user.column);
     const router = useRouter();
 
     const onClickToLogin = () => {
@@ -77,10 +82,15 @@ export default defineComponent({
         name: "singup",
       });
     };
+    // 退出登录
+    const onLogOut = () => {
+      context.emit("log-out", false);
+    };
     return {
       onClickToLogin,
       onCreateNewPost,
       onClickToSingUp,
+      onLogOut
     };
   },
 });
