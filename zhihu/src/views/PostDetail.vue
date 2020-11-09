@@ -120,7 +120,6 @@ export default defineComponent({
       store
         .dispatch("deletePost", currentId)
         .then((rawData: RespontenProps<PostProps>) => {
-          console.log(rawData.data)
           CreateMessage("删除成功，2秒后跳转到专栏首页","success")
           setTimeout(()=>{
             router.push({

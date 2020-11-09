@@ -15,6 +15,7 @@ export function generateFitUrl(data: AvatarType, width: number | string, height:
 }
 
 export function addColumnAvatar(data: ColumnProps | UserProps, width: number, height: number) {
+    console.log(data)
     if (data.avatar) {
         generateFitUrl(data.avatar, width, height)
     } else {
