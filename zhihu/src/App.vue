@@ -73,6 +73,7 @@ export default defineComponent({
     const onCloseOut = (val: boolean) => {
       store.state.user.isLogin = val;
       store.commit("logout");
+      CreateMessage("退出成功", "success");
     };
     return {
       currentUser,
