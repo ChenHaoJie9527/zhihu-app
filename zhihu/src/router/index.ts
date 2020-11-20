@@ -77,7 +77,6 @@ router.beforeEach((to, from, next) => {
             })
         } else {
             if (requiredLogin) {
-                console.log("456");
                 next({ name: "login" });
             } else {
                 console.log("789");
