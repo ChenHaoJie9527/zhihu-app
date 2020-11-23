@@ -18,7 +18,6 @@
         <img id="uploadedImg" :src="dataProps.uploadedData.data.url" alt="" />
       </template>
     </Uploader>
-
     <ValidateForm @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">文章标题：</label>
@@ -156,11 +155,9 @@ export default defineComponent({
       });
       const { passed, error } = res;
       if (error === "format") {
-        console.log("format");
         createMessage("上传图片只能是JPG/PNG格式！", "error");
       }
       if (error === "size") {
-        console.log("size");
         createMessage("上传图片大小不能超过1MB！", "error");
       }
       return passed;
