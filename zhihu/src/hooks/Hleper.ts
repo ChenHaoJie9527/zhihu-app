@@ -4,7 +4,6 @@ interface CondiTionProps {
 }
 type ErrorType = "size" | "format" | null;
 
-import { strict } from 'assert';
 import { ColumnProps, AvatarType, UserProps } from "../store";
 export function generateFitUrl(data: AvatarType, width: number | string, height: number | string, format = ["m_pad"]) {
     if (data && data.url) {
