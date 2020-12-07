@@ -11,7 +11,6 @@
 
 <script lang="ts">
 import { defineComponent, onUnmounted } from "vue";
-import { CreateLoading } from "../hooks/createLoading";
 export default defineComponent({
   name: "Loading",
   props: {
@@ -25,7 +24,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    // CreateLoading(props.text as string, props.background as string);
     const loadingNode = document.createElement("div");
     loadingNode.id = "loading";
     document.body.appendChild(loadingNode);

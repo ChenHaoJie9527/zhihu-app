@@ -26,7 +26,6 @@ import { computed, defineComponent, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
-// import CreateMessage from "../hooks/createMessage";
 import { useLoadMore } from "../hooks/useLoadMore";
 export default defineComponent({
   name: "home",
